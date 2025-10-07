@@ -1,0 +1,606 @@
+MySQL Shell 8.0.43
+
+Copyright (c) 2016, 2025, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 8
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > use sakila;
+Default schema set to `sakila`.
+Fetching global names, object names from `sakila` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  sakila  SQL > show tables;
++----------------------------+
+| Tables_in_sakila           |
++----------------------------+
+| actor                      |
+| actor_info                 |
+| address                    |
+| category                   |
+| city                       |
+| country                    |
+| customer                   |
+| customer_list              |
+| film                       |
+| film_actor                 |
+| film_category              |
+| film_list                  |
+| film_text                  |
+| inventory                  |
+| language                   |
+| nicer_but_slower_film_list |
+| payment                    |
+| rental                     |
+| sales_by_film_category     |
+| sales_by_store             |
+| staff                      |
+| staff_list                 |
+| store                      |
++----------------------------+
+23 rows in set (0.0140 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > desc payment;
++--------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type              | Null | Key | Default           | Extra                                         |
++--------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+| payment_id   | smallint unsigned | NO   | PRI | NULL              | auto_increment                                |
+| customer_id  | smallint unsigned | NO   | MUL | NULL              |                                               |
+| staff_id     | tinyint unsigned  | NO   | MUL | NULL              |                                               |
+| rental_id    | int               | YES  | MUL | NULL              |                                               |
+| amount       | decimal(5,2)      | NO   |     | NULL              |                                               |
+| payment_date | datetime          | NO   |     | NULL              |                                               |
+| last_update  | timestamp         | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+7 rows in set (0.0052 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > select customer_id amount
+                                       -> from payment
+                                       -> limit 50;
++--------+
+| amount |
++--------+
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      1 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
+|      2 |
++--------+
+50 rows in set (0.0347 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > select b.first_name, b.last_name, a.amount
+                                       -> from payment a
+                                       -> inner join customer b on a.customers_id = b.customer_id limit 50;
+ERROR: 1054 (42S22): Unknown column 'a.customers_id' in 'on clause'
+ MySQL  localhost:3306 ssl  sakila  SQL > select b.first_name, b.last_name, a.amount from payment a inner join customer b on a.customer_id = b.customer_id limit 50;
++------------+-----------+--------+
+| first_name | last_name | amount |
++------------+-----------+--------+
+| MARY       | SMITH     |   2.99 |
+| MARY       | SMITH     |   0.99 |
+| MARY       | SMITH     |   5.99 |
+| MARY       | SMITH     |   0.99 |
+| MARY       | SMITH     |   9.99 |
+| MARY       | SMITH     |   4.99 |
+| MARY       | SMITH     |   4.99 |
+| MARY       | SMITH     |   0.99 |
+| MARY       | SMITH     |   3.99 |
+| MARY       | SMITH     |   5.99 |
+| MARY       | SMITH     |   5.99 |
+| MARY       | SMITH     |   4.99 |
+| MARY       | SMITH     |   4.99 |
+| MARY       | SMITH     |   7.99 |
+| MARY       | SMITH     |   2.99 |
+| MARY       | SMITH     |   4.99 |
+| MARY       | SMITH     |   4.99 |
+| MARY       | SMITH     |   0.99 |
+| MARY       | SMITH     |   0.99 |
+| MARY       | SMITH     |   2.99 |
+| MARY       | SMITH     |   2.99 |
+| MARY       | SMITH     |   4.99 |
+| MARY       | SMITH     |   3.99 |
+| MARY       | SMITH     |   0.99 |
+| MARY       | SMITH     |   4.99 |
+| MARY       | SMITH     |   0.99 |
+| MARY       | SMITH     |   0.99 |
+| MARY       | SMITH     |   2.99 |
+| MARY       | SMITH     |   0.99 |
+| MARY       | SMITH     |   1.99 |
+| MARY       | SMITH     |   2.99 |
+| MARY       | SMITH     |   5.99 |
+| PATRICIA   | JOHNSON   |   4.99 |
+| PATRICIA   | JOHNSON   |   2.99 |
+| PATRICIA   | JOHNSON   |   2.99 |
+| PATRICIA   | JOHNSON   |   6.99 |
+| PATRICIA   | JOHNSON   |   4.99 |
+| PATRICIA   | JOHNSON   |   5.99 |
+| PATRICIA   | JOHNSON   |   5.99 |
+| PATRICIA   | JOHNSON   |   5.99 |
+| PATRICIA   | JOHNSON   |   2.99 |
+| PATRICIA   | JOHNSON   |   5.99 |
+| PATRICIA   | JOHNSON   |   4.99 |
+| PATRICIA   | JOHNSON   |  10.99 |
+| PATRICIA   | JOHNSON   |   0.99 |
+| PATRICIA   | JOHNSON   |   6.99 |
+| PATRICIA   | JOHNSON   |   6.99 |
+| PATRICIA   | JOHNSON   |   2.99 |
+| PATRICIA   | JOHNSON   |   0.99 |
+| PATRICIA   | JOHNSON   |   0.99 |
++------------+-----------+--------+
+50 rows in set (0.0261 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > select b.first_name, b.last_name, a.amount from payment a inner join customer b on a.customer_id = b.customer_id
+                                       -> group by a.customer_id limit
+                                       -> kkk;
+ERROR: 1327 (42000): Undeclared variable: kkk
+ MySQL  localhost:3306 ssl  sakila  SQL > select b.first_name, b.last_name, sum(amount) as total from payment a inner join customer b on a.customer_id = b.customer_id group by a.customer_id limit 50;
++------------+-----------+--------+
+| first_name | last_name | total  |
++------------+-----------+--------+
+| MARY       | SMITH     | 118.68 |
+| PATRICIA   | JOHNSON   | 128.73 |
+| LINDA      | WILLIAMS  | 135.74 |
+| BARBARA    | JONES     |  81.78 |
+| ELIZABETH  | BROWN     | 144.62 |
+| JENNIFER   | DAVIS     |  93.72 |
+| MARIA      | MILLER    | 151.67 |
+| SUSAN      | WILSON    |  92.76 |
+| MARGARET   | MOORE     |  89.77 |
+| DOROTHY    | TAYLOR    |  99.75 |
+| LISA       | ANDERSON  | 106.76 |
+| NANCY      | THOMAS    | 103.72 |
+| KAREN      | JACKSON   | 131.73 |
+| BETTY      | WHITE     | 117.72 |
+| HELEN      | HARRIS    | 134.68 |
+| SANDRA     | MARTIN    | 118.72 |
+| DONNA      | THOMPSON  |  98.79 |
+| CAROL      | GARCIA    |  91.78 |
+| RUTH       | MARTINEZ  | 125.76 |
+| SHARON     | ROBINSON  | 115.70 |
+| MICHELLE   | CLARK     | 155.65 |
+| LAURA      | RODRIGUEZ | 113.78 |
+| SARAH      | LEWIS     | 119.70 |
+| KIMBERLY   | LEE       |  95.75 |
+| DEBORAH    | WALKER    | 115.71 |
+| JESSICA    | HALL      | 152.66 |
+| SHIRLEY    | ALLEN     | 126.69 |
+| CYNTHIA    | YOUNG     | 111.68 |
+| ANGELA     | HERNANDEZ | 140.64 |
+| MELISSA    | KING      | 123.66 |
+| BRENDA     | WRIGHT    | 104.74 |
+| AMY        | LOPEZ     | 127.71 |
+| ANNA       | HILL      |  91.79 |
+| REBECCA    | SCOTT     |  89.76 |
+| VIRGINIA   | GREEN     | 129.68 |
+| KATHLEEN   | ADAMS     |  92.73 |
+| PAMELA     | BAKER     |  95.77 |
+| MARTHA     | GONZALEZ  | 127.66 |
+| DEBRA      | NELSON    | 141.71 |
+| AMANDA     | CARTER    | 110.73 |
+| STEPHANIE  | MITCHELL  | 118.75 |
+| CAROLYN    | PEREZ     | 117.70 |
+| CHRISTINE  | ROBERTS   |  99.76 |
+| MARIE      | TURNER    | 114.74 |
+| JANET      | PHILLIPS  | 127.73 |
+| CATHERINE  | CAMPBELL  | 142.66 |
+| FRANCES    | PARKER    | 108.78 |
+| ANN        | EVANS     |  76.83 |
+| JOYCE      | EDWARDS   | 130.72 |
+| DIANE      | COLLINS   | 169.65 |
++------------+-----------+--------+
+50 rows in set (0.0184 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > select b.first_name, b.last_name, sum(amount) as total from payment a inner join customer b on a.customer_id = b.customer_id group by a.customer_id order by total limit 50;
++------------+-------------+-------+
+| first_name | last_name   | total |
++------------+-------------+-------+
+| CAROLINE   | BOWMAN      | 50.85 |
+| LEONA      | OBRIEN      | 50.86 |
+| BRIAN      | WYMAN       | 52.88 |
+| JOHNNY     | TURPIN      | 57.81 |
+| ANNIE      | RUSSELL     | 58.82 |
+| KATHERINE  | RIVERA      | 58.86 |
+| TIFFANY    | JORDAN      | 59.86 |
+| ANITA      | MORALES     | 62.85 |
+| MATTIE     | HOFFMAN     | 64.78 |
+| KIRK       | STCLAIR     | 64.81 |
+| LESTER     | KRAUS       | 65.84 |
+| ALBERTO    | HENNING     | 66.79 |
+| LLOYD      | DOWD        | 66.81 |
+| JOANN      | GARDNER     | 66.84 |
+| VERA       | MCCOY       | 67.82 |
+| JILL       | HAWKINS     | 68.79 |
+| PENNY      | NEAL        | 68.82 |
+| FLOYD      | GANDY       | 69.83 |
+| WAYNE      | TRUONG      | 70.81 |
+| IRMA       | PEARSON     | 70.82 |
+| SAMANTHA   | DUNCAN      | 71.77 |
+| LAUREN     | HUDSON      | 71.80 |
+| ANTHONY    | SCHWAB      | 71.80 |
+| EDITH      | MCDONALD    | 71.81 |
+| EUGENE     | CULPEPPER   | 71.81 |
+| TERRY      | GRISSOM     | 72.80 |
+| JONATHAN   | SCARBOROUGH | 72.82 |
+| FELIX      | GAFFNEY     | 73.76 |
+| JUAN       | FRALEY      | 73.77 |
+| TONY       | CARRANZA    | 73.79 |
+| JO         | FOWLER      | 73.80 |
+| SHEILA     | WELLS       | 73.82 |
+| HENRY      | BILLINGSLEY | 73.82 |
+| JEROME     | KENYON      | 73.84 |
+| FRANKLIN   | TROUTMAN    | 74.78 |
+| JEANETTE   | GREENE      | 74.80 |
+| ADRIAN     | CLARY       | 74.81 |
+| DWIGHT     | LOMBARDI    | 74.83 |
+| MARVIN     | YEE         | 75.79 |
+| DARRYL     | ASHCRAFT    | 76.77 |
+| IDA        | ANDREWS     | 76.77 |
+| PEARL      | GARZA       | 76.78 |
+| ANN        | EVANS       | 76.83 |
+| IRENE      | PRICE       | 77.77 |
+| NELSON     | CHRISTENSON | 77.80 |
+| PAULA      | BRYANT      | 77.82 |
+| GREGORY    | MAULDIN     | 78.77 |
+| HERBERT    | KRUGER      | 78.80 |
+| ANTONIO    | MEEK        | 78.84 |
+| RAY        | HOULE       | 79.78 |
++------------+-------------+-------+
+50 rows in set (0.0529 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > show tables;
++----------------------------+
+| Tables_in_sakila           |
++----------------------------+
+| actor                      |
+| actor_info                 |
+| address                    |
+| category                   |
+| city                       |
+| country                    |
+| customer                   |
+| customer_list              |
+| film                       |
+| film_actor                 |
+| film_category              |
+| film_list                  |
+| film_text                  |
+| inventory                  |
+| language                   |
+| nicer_but_slower_film_list |
+| payment                    |
+| rental                     |
+| sales_by_film_category     |
+| sales_by_store             |
+| staff                      |
+| staff_list                 |
+| store                      |
++----------------------------+
+23 rows in set (0.0029 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > desc renta;
+ERROR: 1146 (42S02): Table 'sakila.renta' doesn't exist
+ MySQL  localhost:3306 ssl  sakila  SQL > desc rental;
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type               | Null | Key | Default           | Extra                                         |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| rental_id    | int                | NO   | PRI | NULL              | auto_increment                                |
+| rental_date  | datetime           | NO   | MUL | NULL              |                                               |
+| inventory_id | mediumint unsigned | NO   | MUL | NULL              |                                               |
+| customer_id  | smallint unsigned  | NO   | MUL | NULL              |                                               |
+| return_date  | datetime           | YES  |     | NULL              |                                               |
+| staff_id     | tinyint unsigned   | NO   | MUL | NULL              |                                               |
+| last_update  | timestamp          | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+7 rows in set (0.0025 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > desc inventory;
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type               | Null | Key | Default           | Extra                                         |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| inventory_id | mediumint unsigned | NO   | PRI | NULL              | auto_increment                                |
+| film_id      | smallint unsigned  | NO   | MUL | NULL              |                                               |
+| store_id     | tinyint unsigned   | NO   | MUL | NULL              |                                               |
+| last_update  | timestamp          | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+4 rows in set (0.0031 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > desc film;
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| Field                | Type                                                                | Null | Key | Default           | Extra                                         |
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| film_id              | smallint unsigned                                                   | NO   | PRI | NULL              | auto_increment                                |
+| title                | varchar(128)                                                        | NO   | MUL | NULL              |                                               |
+| description          | text                                                                | YES  |     | NULL              |                                               |
+| release_year         | year                                                                | YES  |     | NULL              |                                               |
+| language_id          | tinyint unsigned                                                    | NO   | MUL | NULL              |                                               |
+| original_language_id | tinyint unsigned                                                    | YES  | MUL | NULL              |                                               |
+| rental_duration      | tinyint unsigned                                                    | NO   |     | 3                 |                                               |
+| rental_rate          | decimal(4,2)                                                        | NO   |     | 4.99              |                                               |
+| length               | smallint unsigned                                                   | YES  |     | NULL              |                                               |
+| replacement_cost     | decimal(5,2)                                                        | NO   |     | 19.99             |                                               |
+| rating               | enum('G','PG','PG-13','R','NC-17')                                  | YES  |     | G                 |                                               |
+| special_features     | set('Trailers','Commentaries','Deleted Scenes','Behind the Scenes') | YES  |     | NULL              |                                               |
+| last_update          | timestamp                                                           | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+13 rows in set (0.0038 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > desc rental;
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type               | Null | Key | Default           | Extra                                         |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| rental_id    | int                | NO   | PRI | NULL              | auto_increment                                |
+| rental_date  | datetime           | NO   | MUL | NULL              |                                               |
+| inventory_id | mediumint unsigned | NO   | MUL | NULL              |                                               |
+| customer_id  | smallint unsigned  | NO   | MUL | NULL              |                                               |
+| return_date  | datetime           | YES  |     | NULL              |                                               |
+| staff_id     | tinyint unsigned   | NO   | MUL | NULL              |                                               |
+| last_update  | timestamp          | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+7 rows in set (0.0022 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > select b.first_name,b.last_name, d.title
+                                       -> from rental a
+                                       -> inner join customer b on a.customer_id = b.customer_id
+                                       -> inner join inventory c on a a.intentory_id = c.inventory_id
+                                       -> inner join film d on c.film_id = d.film.id
+                                       -> limit 50;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'a.intentory_id = c.inventory_id
+inner join film d on c.film_id = d.film.id
+limit' at line 4
+ MySQL  localhost:3306 ssl  sakila  SQL > select b.first_name,b.last_name, d.title from rental a inner join customer b on a.customer_id = b.customer_id inner join inventory c on a a.inventory_id = c.inventory_id inner join film d on c.film_id = d.film.id limit 50;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'a.inventory_id = c.inventory_id inner join film d on c.film_id = d.film.id limit' at line 1
+ MySQL  localhost:3306 ssl  sakila  SQL > select b.first_name,b.last_name, d.title from rental a inner join customer b on a.customer_id = b.customer_id inner join inventory c on a a.inventory_id = c.inventory_id inner join film d on c.film_id = d.film_id limit 50;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'a.inventory_id = c.inventory_id inner join film d on c.film_id = d.film_id limit' at line 1
+ MySQL  localhost:3306 ssl  sakila  SQL > SELECT B.first_name, B.last_name, D.title FROM rental A INNER JOIN customer B ON A.customer_id = B.customer_id INNER JOIN inventory C ON A.inventory_id = C.inventory_id INNER JOIN film D ON c.film_id = D.film_id LIMIT 100;
++------------+-------------+------------------+
+| first_name | last_name   | title            |
++------------+-------------+------------------+
+| JOEL       | FRANCISCO   | ACADEMY DINOSAUR |
+| GABRIEL    | HARDER      | ACADEMY DINOSAUR |
+| DIANNE     | SHELTON     | ACADEMY DINOSAUR |
+| NORMAN     | CURRIER     | ACADEMY DINOSAUR |
+| BEATRICE   | ARNOLD      | ACADEMY DINOSAUR |
+| GERALDINE  | PERKINS     | ACADEMY DINOSAUR |
+| VIRGIL     | WOFFORD     | ACADEMY DINOSAUR |
+| WILLIE     | MARKHAM     | ACADEMY DINOSAUR |
+| DEBRA      | NELSON      | ACADEMY DINOSAUR |
+| DARREN     | WINDHAM     | ACADEMY DINOSAUR |
+| ROBERT     | BAUGHMAN    | ACADEMY DINOSAUR |
+| HENRY      | BILLINGSLEY | ACADEMY DINOSAUR |
+| SERGIO     | STANFIELD   | ACADEMY DINOSAUR |
+| FREDDIE    | DUGGAN      | ACADEMY DINOSAUR |
+| MARIE      | TURNER      | ACADEMY DINOSAUR |
+| MATTIE     | HOFFMAN     | ACADEMY DINOSAUR |
+| DWAYNE     | OLVERA      | ACADEMY DINOSAUR |
+| CARL       | ARTIS       | ACADEMY DINOSAUR |
+| NATHAN     | RUNYON      | ACADEMY DINOSAUR |
+| HECTOR     | POINDEXTER  | ACADEMY DINOSAUR |
+| TINA       | SIMMONS     | ACADEMY DINOSAUR |
+| SUSAN      | WILSON      | ACADEMY DINOSAUR |
+| REBECCA    | SCOTT       | ACADEMY DINOSAUR |
+| PENNY      | NEAL        | ACE GOLDFINGER   |
+| BRANDON    | HUEY        | ACE GOLDFINGER   |
+| LUCILLE    | HOLMES      | ACE GOLDFINGER   |
+| KATHRYN    | COLEMAN     | ACE GOLDFINGER   |
+| AMBER      | DIXON       | ACE GOLDFINGER   |
+| STACY      | CUNNINGHAM  | ACE GOLDFINGER   |
+| JESSIE     | MILAM       | ACE GOLDFINGER   |
+| PEARL      | GARZA       | ADAPTATION HOLES |
+| TRAVIS     | ESTEP       | ADAPTATION HOLES |
+| STELLA     | MORENO      | ADAPTATION HOLES |
+| CASSANDRA  | WALTERS     | ADAPTATION HOLES |
+| DEBORAH    | WALKER      | ADAPTATION HOLES |
+| ROBIN      | HAYES       | ADAPTATION HOLES |
+| OLGA       | JIMENEZ     | ADAPTATION HOLES |
+| MARY       | SMITH       | ADAPTATION HOLES |
+| ROSE       | HOWARD      | ADAPTATION HOLES |
+| JOANNE     | ROBERTSON   | ADAPTATION HOLES |
+| STEVEN     | CURLEY      | ADAPTATION HOLES |
+| MARION     | SNYDER      | ADAPTATION HOLES |
+| VIVIAN     | RUIZ        | AFFAIR PREJUDICE |
+| NINA       | SOTO        | AFFAIR PREJUDICE |
+| JORDAN     | ARCHULETA   | AFFAIR PREJUDICE |
+| DANIELLE   | DANIELS     | AFFAIR PREJUDICE |
+| SUE        | PETERS      | AFFAIR PREJUDICE |
+| MICHAEL    | SILVERMAN   | AFFAIR PREJUDICE |
+| JEFF       | EAST        | AFFAIR PREJUDICE |
+| MEGAN      | PALMER      | AFFAIR PREJUDICE |
+| ELEANOR    | HUNT        | AFFAIR PREJUDICE |
+| NATALIE    | MEYER       | AFFAIR PREJUDICE |
+| TOMMY      | COLLAZO     | AFFAIR PREJUDICE |
+| MINNIE     | ROMERO      | AFFAIR PREJUDICE |
+| CARMEN     | OWENS       | AFFAIR PREJUDICE |
+| DEANNA     | BYRD        | AFFAIR PREJUDICE |
+| KIMBERLY   | LEE         | AFFAIR PREJUDICE |
+| BEVERLY    | BROOKS      | AFFAIR PREJUDICE |
+| JIMMY      | SCHRADER    | AFFAIR PREJUDICE |
+| JANICE     | WARD        | AFFAIR PREJUDICE |
+| RUBEN      | GEARY       | AFFAIR PREJUDICE |
+| CARMEN     | OWENS       | AFFAIR PREJUDICE |
+| WALLACE    | SLONE       | AFFAIR PREJUDICE |
+| OSCAR      | AQUINO      | AFFAIR PREJUDICE |
+| JEROME     | KENYON      | AFFAIR PREJUDICE |
+| CONNIE     | WALLACE     | AFRICAN EGG      |
+| RICARDO    | MEADOR      | AFRICAN EGG      |
+| BARRY      | LOVELACE    | AFRICAN EGG      |
+| CASEY      | MENA        | AFRICAN EGG      |
+| JOSHUA     | MARK        | AFRICAN EGG      |
+| CURTIS     | IRBY        | AFRICAN EGG      |
+| NORA       | HERRERA     | AFRICAN EGG      |
+| AMY        | LOPEZ       | AFRICAN EGG      |
+| ELAINE     | STEVENS     | AFRICAN EGG      |
+| GILBERT    | SLEDGE      | AFRICAN EGG      |
+| JOYCE      | EDWARDS     | AFRICAN EGG      |
+| SETH       | HANNON      | AFRICAN EGG      |
+| CLARENCE   | GAMEZ       | AGENT TRUMAN     |
+| JANET      | PHILLIPS    | AGENT TRUMAN     |
+| LESLIE     | SEWARD      | AGENT TRUMAN     |
+| PERRY      | SWAFFORD    | AGENT TRUMAN     |
+| IDA        | ANDREWS     | AGENT TRUMAN     |
+| CATHERINE  | CAMPBELL    | AGENT TRUMAN     |
+| TERRY      | GRISSOM     | AGENT TRUMAN     |
+| BETTY      | WHITE       | AGENT TRUMAN     |
+| ALAN       | KAHN        | AGENT TRUMAN     |
+| ELIZABETH  | BROWN       | AGENT TRUMAN     |
+| TONYA      | CHAPMAN     | AGENT TRUMAN     |
+| TRACY      | COLE        | AGENT TRUMAN     |
+| DIANE      | COLLINS     | AGENT TRUMAN     |
+| CORY       | MEEHAN      | AGENT TRUMAN     |
+| MAURICE    | CRAWLEY     | AGENT TRUMAN     |
+| GINA       | WILLIAMSON  | AGENT TRUMAN     |
+| ANTHONY    | SCHWAB      | AGENT TRUMAN     |
+| CLINTON    | BUFORD      | AGENT TRUMAN     |
+| KRISTIN    | JOHNSTON    | AGENT TRUMAN     |
+| ROSEMARY   | SCHMIDT     | AGENT TRUMAN     |
+| MARTHA     | GONZALEZ    | AGENT TRUMAN     |
+| FRED       | WHEAT       | AIRPLANE SIERRA  |
+| DEAN       | SAUER       | AIRPLANE SIERRA  |
++------------+-------------+------------------+
+100 rows in set (0.0590 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > SELECT f.title AS Titulo, l.name AS Lenguaje, CONCAT(a.first_name, ' ', a.last_name) AS Actor FROM film f INNER JOIN language l ON f.language_id = l.language_id INNER JOIN film_actor fa ON f.film_id = fa.film_id INNER JOIN actor a ON fa.actor_id = a.actor_id ORDER BY f.title LIMIT 100;
++------------------+----------+-------------------+
+| Titulo           | Lenguaje | Actor             |
++------------------+----------+-------------------+
+| ACADEMY DINOSAUR | English  | OPRAH KILMER      |
+| ACADEMY DINOSAUR | English  | WARREN NOLTE      |
+| ACADEMY DINOSAUR | English  | MENA TEMPLE       |
+| ACADEMY DINOSAUR | English  | JOHNNY CAGE       |
+| ACADEMY DINOSAUR | English  | SANDRA PECK       |
+| ACADEMY DINOSAUR | English  | LUCILLE TRACY     |
+| ACADEMY DINOSAUR | English  | CHRISTIAN GABLE   |
+| ACADEMY DINOSAUR | English  | PENELOPE GUINESS  |
+| ACADEMY DINOSAUR | English  | MARY KEITEL       |
+| ACADEMY DINOSAUR | English  | ROCK DUKAKIS      |
+| ACE GOLDFINGER   | English  | CHRIS DEPP        |
+| ACE GOLDFINGER   | English  | SEAN GUINESS      |
+| ACE GOLDFINGER   | English  | MINNIE ZELLWEGER  |
+| ACE GOLDFINGER   | English  | BOB FAWCETT       |
+| ADAPTATION HOLES | English  | JULIANNE DENCH    |
+| ADAPTATION HOLES | English  | RAY JOHANSSON     |
+| ADAPTATION HOLES | English  | CAMERON STREEP    |
+| ADAPTATION HOLES | English  | BOB FAWCETT       |
+| ADAPTATION HOLES | English  | NICK WAHLBERG     |
+| AFFAIR PREJUDICE | English  | OPRAH KILMER      |
+| AFFAIR PREJUDICE | English  | FAY WINSLET       |
+| AFFAIR PREJUDICE | English  | KENNETH PESCI     |
+| AFFAIR PREJUDICE | English  | SCARLETT DAMON    |
+| AFFAIR PREJUDICE | English  | JODIE DEGENERES   |
+| AFRICAN EGG      | English  | MATTHEW LEIGH     |
+| AFRICAN EGG      | English  | DUSTIN TAUTOU     |
+| AFRICAN EGG      | English  | GARY PHOENIX      |
+| AFRICAN EGG      | English  | THORA TEMPLE      |
+| AFRICAN EGG      | English  | MATTHEW CARREY    |
+| AGENT TRUMAN     | English  | MORGAN WILLIAMS   |
+| AGENT TRUMAN     | English  | WARREN NOLTE      |
+| AGENT TRUMAN     | English  | JAYNE NEESON      |
+| AGENT TRUMAN     | English  | SANDRA KILMER     |
+| AGENT TRUMAN     | English  | KIRSTEN PALTROW   |
+| AGENT TRUMAN     | English  | REESE WEST        |
+| AGENT TRUMAN     | English  | KENNETH HOFFMAN   |
+| AIRPLANE SIERRA  | English  | MENA HOPPER       |
+| AIRPLANE SIERRA  | English  | OPRAH KILMER      |
+| AIRPLANE SIERRA  | English  | RICHARD PENN      |
+| AIRPLANE SIERRA  | English  | JIM MOSTEL        |
+| AIRPLANE SIERRA  | English  | MICHAEL BOLGER    |
+| AIRPORT POLLOCK  | English  | SUSAN DAVIS       |
+| AIRPORT POLLOCK  | English  | GENE WILLIS       |
+| AIRPORT POLLOCK  | English  | FAY KILMER        |
+| AIRPORT POLLOCK  | English  | LUCILLE DEE       |
+| ALABAMA DEVIL    | English  | GRETA KEITEL      |
+| ALABAMA DEVIL    | English  | WARREN NOLTE      |
+| ALABAMA DEVIL    | English  | RIP WINSLET       |
+| ALABAMA DEVIL    | English  | MENA TEMPLE       |
+| ALABAMA DEVIL    | English  | RIP CRAWFORD      |
+| ALABAMA DEVIL    | English  | ELVIS MARX        |
+| ALABAMA DEVIL    | English  | CHRISTIAN GABLE   |
+| ALABAMA DEVIL    | English  | MERYL ALLEN       |
+| ALABAMA DEVIL    | English  | WILLIAM HACKMAN   |
+| ALADDIN CALENDAR | English  | JADA RYDER        |
+| ALADDIN CALENDAR | English  | RENEE TRACY       |
+| ALADDIN CALENDAR | English  | RAY JOHANSSON     |
+| ALADDIN CALENDAR | English  | VAL BOLGER        |
+| ALADDIN CALENDAR | English  | JUDY DEAN         |
+| ALADDIN CALENDAR | English  | ALEC WAYNE        |
+| ALADDIN CALENDAR | English  | ROCK DUKAKIS      |
+| ALADDIN CALENDAR | English  | GRETA MALDEN      |
+| ALAMO VIDEOTAPE  | English  | MICHAEL BENING    |
+| ALAMO VIDEOTAPE  | English  | SEAN GUINESS      |
+| ALAMO VIDEOTAPE  | English  | SCARLETT DAMON    |
+| ALAMO VIDEOTAPE  | English  | JOHNNY CAGE       |
+| ALASKA PHANTOM   | English  | JEFF SILVERSTONE  |
+| ALASKA PHANTOM   | English  | GENE MCKELLEN     |
+| ALASKA PHANTOM   | English  | ALBERT JOHANSSON  |
+| ALASKA PHANTOM   | English  | SYLVESTER DERN    |
+| ALASKA PHANTOM   | English  | SIDNEY CROWE      |
+| ALASKA PHANTOM   | English  | BURT POSEY        |
+| ALASKA PHANTOM   | English  | VAL BOLGER        |
+| ALI FOREVER      | English  | KENNETH TORN      |
+| ALI FOREVER      | English  | CHRISTOPHER BERRY |
+| ALI FOREVER      | English  | CARY MCCONAUGHEY  |
+| ALI FOREVER      | English  | JON CHASE         |
+| ALI FOREVER      | English  | MORGAN MCDORMAND  |
+| ALICE FANTASIA   | English  | MINNIE ZELLWEGER  |
+| ALICE FANTASIA   | English  | WOODY HOFFMAN     |
+| ALICE FANTASIA   | English  | MORGAN WILLIAMS   |
+| ALICE FANTASIA   | English  | ROCK DUKAKIS      |
+| ALIEN CENTER     | English  | MENA HOPPER       |
+| ALIEN CENTER     | English  | HUMPHREY WILLIS   |
+| ALIEN CENTER     | English  | RENEE TRACY       |
+| ALIEN CENTER     | English  | SIDNEY CROWE      |
+| ALIEN CENTER     | English  | KENNETH PALTROW   |
+| ALIEN CENTER     | English  | BURT DUKAKIS      |
+| ALLEY EVOLUTION  | English  | JOHN SUVARI       |
+| ALLEY EVOLUTION  | English  | GREGORY GOODING   |
+| ALLEY EVOLUTION  | English  | ALBERT JOHANSSON  |
+| ALLEY EVOLUTION  | English  | JUDE CRUISE       |
+| ALLEY EVOLUTION  | English  | KARL BERRY        |
+| ALONE TRIP       | English  | RENEE BALL        |
+| ALONE TRIP       | English  | LAURENCE BULLOCK  |
+| ALONE TRIP       | English  | CHRIS DEPP        |
+| ALONE TRIP       | English  | UMA WOOD          |
+| ALONE TRIP       | English  | KARL BERRY        |
+| ALONE TRIP       | English  | ED CHASE          |
+| ALONE TRIP       | English  | WOODY JOLIE       |
++------------------+----------+-------------------+
+100 rows in set (0.0715 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL >
