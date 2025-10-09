@@ -1,0 +1,1331 @@
+MySQL Shell 8.0.43
+
+Copyright (c) 2016, 2025, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 8
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > use sakila;
+Default schema set to `sakila`.
+Fetching global names, object names from `sakila` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  sakila  SQL > show tables;
++----------------------------+
+| Tables_in_sakila           |
++----------------------------+
+| actor                      |
+| actor_info                 |
+| address                    |
+| category                   |
+| city                       |
+| country                    |
+| customer                   |
+| customer_list              |
+| film                       |
+| film_actor                 |
+| film_category              |
+| film_list                  |
+| film_text                  |
+| inventory                  |
+| language                   |
+| nicer_but_slower_film_list |
+| payment                    |
+| rental                     |
+| sales_by_film_category     |
+| sales_by_store             |
+| staff                      |
+| staff_list                 |
+| store                      |
++----------------------------+
+23 rows in set (0.0040 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > desc film;
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| Field                | Type                                                                | Null | Key | Default           | Extra                                         |
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| film_id              | smallint unsigned                                                   | NO   | PRI | NULL              | auto_increment                                |
+| title                | varchar(128)                                                        | NO   | MUL | NULL              |                                               |
+| description          | text                                                                | YES  |     | NULL              |                                               |
+| release_year         | year                                                                | YES  |     | NULL              |                                               |
+| language_id          | tinyint unsigned                                                    | NO   | MUL | NULL              |                                               |
+| original_language_id | tinyint unsigned                                                    | YES  | MUL | NULL              |                                               |
+| rental_duration      | tinyint unsigned                                                    | NO   |     | 3                 |                                               |
+| rental_rate          | decimal(4,2)                                                        | NO   |     | 4.99              |                                               |
+| length               | smallint unsigned                                                   | YES  |     | NULL              |                                               |
+| replacement_cost     | decimal(5,2)                                                        | NO   |     | 19.99             |                                               |
+| rating               | enum('G','PG','PG-13','R','NC-17')                                  | YES  |     | G                 |                                               |
+| special_features     | set('Trailers','Commentaries','Deleted Scenes','Behind the Scenes') | YES  |     | NULL              |                                               |
+| last_update          | timestamp                                                           | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+13 rows in set (0.0126 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > desc staff;
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+| Field       | Type              | Null | Key | Default           | Extra                                         |
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+| staff_id    | tinyint unsigned  | NO   | PRI | NULL              | auto_increment                                |
+| first_name  | varchar(45)       | NO   |     | NULL              |                                               |
+| last_name   | varchar(45)       | NO   |     | NULL              |                                               |
+| address_id  | smallint unsigned | NO   | MUL | NULL              |                                               |
+| picture     | blob              | YES  |     | NULL              |                                               |
+| email       | varchar(50)       | YES  |     | NULL              |                                               |
+| store_id    | tinyint unsigned  | NO   | MUL | NULL              |                                               |
+| active      | tinyint(1)        | NO   |     | 1                 |                                               |
+| username    | varchar(16)       | NO   |     | NULL              |                                               |
+| password    | varchar(40)       | YES  |     | NULL              |                                               |
+| last_update | timestamp         | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+11 rows in set (0.0034 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > desc rental;
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type               | Null | Key | Default           | Extra                                         |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+| rental_id    | int                | NO   | PRI | NULL              | auto_increment                                |
+| rental_date  | datetime           | NO   | MUL | NULL              |                                               |
+| inventory_id | mediumint unsigned | NO   | MUL | NULL              |                                               |
+| customer_id  | smallint unsigned  | NO   | MUL | NULL              |                                               |
+| return_date  | datetime           | YES  |     | NULL              |                                               |
+| staff_id     | tinyint unsigned   | NO   | MUL | NULL              |                                               |
+| last_update  | timestamp          | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+--------------------+------+-----+-------------------+-----------------------------------------------+
+7 rows in set (0.0022 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > desc customer;
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+| Field       | Type              | Null | Key | Default           | Extra                                         |
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+| customer_id | smallint unsigned | NO   | PRI | NULL              | auto_increment                                |
+| store_id    | tinyint unsigned  | NO   | MUL | NULL              |                                               |
+| first_name  | varchar(45)       | NO   |     | NULL              |                                               |
+| last_name   | varchar(45)       | NO   | MUL | NULL              |                                               |
+| email       | varchar(50)       | YES  |     | NULL              |                                               |
+| address_id  | smallint unsigned | NO   | MUL | NULL              |                                               |
+| active      | tinyint(1)        | NO   |     | 1                 |                                               |
+| create_date | datetime          | NO   |     | NULL              |                                               |
+| last_update | timestamp         | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++-------------+-------------------+------+-----+-------------------+-----------------------------------------------+
+9 rows in set (0.0043 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > SELECT f.title AS nombre_pelicula, c.name AS categoria FROM film f INNER JOIN film_category fc ON f.film_id = fc.film_id INNER JOIN category c ON fc.category_id = c.category_id ORDER BY c.name;
++-----------------------------+-------------+
+| nombre_pelicula             | categoria   |
++-----------------------------+-------------+
+| AMADEUS HOLY                | Action      |
+| AMERICAN CIRCUS             | Action      |
+| ANTITRUST TOMATOES          | Action      |
+| ARK RIDGEMONT               | Action      |
+| BAREFOOT MANCHURIAN         | Action      |
+| BERETS AGENT                | Action      |
+| BRIDE INTRIGUE              | Action      |
+| BULL SHAWSHANK              | Action      |
+| CADDYSHACK JEDI             | Action      |
+| CAMPUS REMEMBER             | Action      |
+| CASUALTIES ENCINO           | Action      |
+| CELEBRITY HORN              | Action      |
+| CLUELESS BUCKET             | Action      |
+| CROW GREASE                 | Action      |
+| DANCES NONE                 | Action      |
+| DARKO DORADO                | Action      |
+| DARN FORRESTER              | Action      |
+| DEVIL DESIRE                | Action      |
+| DRAGON SQUAD                | Action      |
+| DREAM PICKUP                | Action      |
+| DRIFTER COMMANDMENTS        | Action      |
+| EASY GLADIATOR              | Action      |
+| ENTRAPMENT SATISFACTION     | Action      |
+| EXCITEMENT EVE              | Action      |
+| FANTASY TROOPERS            | Action      |
+| FIREHOUSE VIETNAM           | Action      |
+| FOOL MOCKINGBIRD            | Action      |
+| FORREST SONS                | Action      |
+| GLASS DYING                 | Action      |
+| GOSFORD DONNIE              | Action      |
+| GRAIL FRANKENSTEIN          | Action      |
+| HANDICAP BOONDOCK           | Action      |
+| HILLS NEIGHBORS             | Action      |
+| KISSING DOLLS               | Action      |
+| LAWRENCE LOVE               | Action      |
+| LORD ARIZONA                | Action      |
+| LUST LOCK                   | Action      |
+| MAGNOLIA FORRESTER          | Action      |
+| MIDNIGHT WESTWARD           | Action      |
+| MINDS TRUMAN                | Action      |
+| MOCKINGBIRD HOLLYWOOD       | Action      |
+| MONTEZUMA COMMAND           | Action      |
+| PARK CITIZEN                | Action      |
+| PATRIOT ROMAN               | Action      |
+| PRIMARY GLASS               | Action      |
+| QUEST MUSSOLINI             | Action      |
+| REAR TRADING                | Action      |
+| RINGS HEARTBREAKERS         | Action      |
+| RUGRATS SHAKESPEARE         | Action      |
+| SHRUNK DIVINE               | Action      |
+| SIDE ARK                    | Action      |
+| SKY MIRACLE                 | Action      |
+| SOUTH WAIT                  | Action      |
+| SPEAKEASY DATE              | Action      |
+| STAGECOACH ARMAGEDDON       | Action      |
+| STORY SIDE                  | Action      |
+| SUSPECTS QUILLS             | Action      |
+| TRIP NEWTON                 | Action      |
+| TRUMAN CRAZY                | Action      |
+| UPRISING UPTOWN             | Action      |
+| WATERFRONT DELIVERANCE      | Action      |
+| WEREWOLF LOLA               | Action      |
+| WOMEN DORADO                | Action      |
+| WORST BANGER                | Action      |
+| ALTER VICTORY               | Animation   |
+| ANACONDA CONFESSIONS        | Animation   |
+| ARGONAUTS TOWN              | Animation   |
+| BIKINI BORROWERS            | Animation   |
+| BLACKOUT PRIVATE            | Animation   |
+| BORROWERS BEDAZZLED         | Animation   |
+| CANYON STOCK                | Animation   |
+| CAROL TEXAS                 | Animation   |
+| CHAMPION FLATLINERS         | Animation   |
+| CLASH FREDDY                | Animation   |
+| CLUB GRAFFITI               | Animation   |
+| CROSSROADS CASUALTIES       | Animation   |
+| DARES PLUTO                 | Animation   |
+| DESIRE ALIEN                | Animation   |
+| DOGMA FAMILY                | Animation   |
+| DONNIE ALLEY                | Animation   |
+| DOORS PRESIDENT             | Animation   |
+| DOUBLE WRATH                | Animation   |
+| DUCK RACER                  | Animation   |
+| EARLY HOME                  | Animation   |
+| FALCON VOLUME               | Animation   |
+| FIGHT JAWBREAKER            | Animation   |
+| FLOATS GARDEN               | Animation   |
+| FLYING HOOK                 | Animation   |
+| FORRESTER COMANCHEROS       | Animation   |
+| GANGS PRIDE                 | Animation   |
+| GHOSTBUSTERS ELF            | Animation   |
+| HARPER DYING                | Animation   |
+| HOOK CHARIOTS               | Animation   |
+| HORN WORKING                | Animation   |
+| INCH JET                    | Animation   |
+| INSECTS STONE               | Animation   |
+| INTENTIONS EMPIRE           | Animation   |
+| ISHTAR ROCKETEER            | Animation   |
+| JUGGLER HARDLY              | Animation   |
+| LAWLESS VISION              | Animation   |
+| LUKE MUMMY                  | Animation   |
+| MASSAGE IMAGE               | Animation   |
+| MENAGERIE RUSHMORE          | Animation   |
+| MIRACLE VIRTUAL             | Animation   |
+| MISSION ZOOLANDER           | Animation   |
+| NASH CHOCOLAT               | Animation   |
+| OSCAR GOLD                  | Animation   |
+| OZ LIAISONS                 | Animation   |
+| PACKER MADIGAN              | Animation   |
+| POND SEATTLE                | Animation   |
+| POTLUCK MIXED               | Animation   |
+| POTTER CONNECTICUT          | Animation   |
+| PRIDE ALAMO                 | Animation   |
+| PUNK DIVORCE                | Animation   |
+| ROOM ROMAN                  | Animation   |
+| SLEEPLESS MONSOON           | Animation   |
+| SNOWMAN ROLLERCOASTER       | Animation   |
+| SONS INTERVIEW              | Animation   |
+| STORM HAPPINESS             | Animation   |
+| SUGAR WONKA                 | Animation   |
+| SUNRISE LEAGUE              | Animation   |
+| TELEMARK HEARTBREAKERS      | Animation   |
+| THEORY MERMAID              | Animation   |
+| THIEF PELICAN               | Animation   |
+| TITANIC BOONDOCK            | Animation   |
+| TRACY CIDER                 | Animation   |
+| TURN STAR                   | Animation   |
+| WAIT CIDER                  | Animation   |
+| WATCH TRACY                 | Animation   |
+| WONKA SEA                   | Animation   |
+| BACKLASH UNDEFEATED         | Children    |
+| BEAR GRACELAND              | Children    |
+| BENEATH RUSH                | Children    |
+| BETRAYED REAR               | Children    |
+| CABIN FLASH                 | Children    |
+| CASPER DRAGONFLY            | Children    |
+| CHRISTMAS MOONSHINE         | Children    |
+| CIRCUS YOUTH                | Children    |
+| CLOCKWORK PARADISE          | Children    |
+| COMANCHEROS ENEMY           | Children    |
+| CROOKED FROGMEN             | Children    |
+| DAUGHTER MADIGAN            | Children    |
+| DOCTOR GRAIL                | Children    |
+| EMPIRE MALKOVICH            | Children    |
+| FARGO GANDHI                | Children    |
+| FOREVER CANDIDATE           | Children    |
+| FULL FLATLINERS             | Children    |
+| FURY MURDER                 | Children    |
+| GHOST GROUNDHOG             | Children    |
+| GIANT TROOPERS              | Children    |
+| GORGEOUS BINGO              | Children    |
+| GRADUATE LORD               | Children    |
+| HALL CASSIDY                | Children    |
+| HEARTBREAKERS BRIGHT        | Children    |
+| HOLLYWOOD ANONYMOUS         | Children    |
+| HOLOCAUST HIGHBALL          | Children    |
+| IDOLS SNATCHERS             | Children    |
+| INVASION CYCLONE            | Children    |
+| JERSEY SASSY                | Children    |
+| JUMPING WRATH               | Children    |
+| LABYRINTH LEAGUE            | Children    |
+| LANGUAGE COWBOY             | Children    |
+| LEGALLY SECRETARY           | Children    |
+| MAGIC MALLRATS              | Children    |
+| MAKER GABLES                | Children    |
+| MICROCOSMOS PARADISE        | Children    |
+| MODEL FISH                  | Children    |
+| MURDER ANTITRUST            | Children    |
+| NOON PAPI                   | Children    |
+| POLISH BROOKLYN             | Children    |
+| ROBBERS JOON                | Children    |
+| SABRINA MIDNIGHT            | Children    |
+| SANTA PARIS                 | Children    |
+| SCARFACE BANG               | Children    |
+| SHEPHERD MIDSUMMER          | Children    |
+| SISTER FREDDY               | Children    |
+| SPLENDOR PATTON             | Children    |
+| STRANGELOVE DESIRE          | Children    |
+| STRANGER STRANGERS          | Children    |
+| SUNDANCE INVASION           | Children    |
+| SWEETHEARTS SUSPECTS        | Children    |
+| TEQUILA PAST                | Children    |
+| TIES HUNGER                 | Children    |
+| TOOTSIE PILOT               | Children    |
+| TWISTED PIRATES             | Children    |
+| UPTOWN YOUNG                | Children    |
+| WALLS ARTIST                | Children    |
+| WARLOCK WEREWOLF            | Children    |
+| WRONG BEHAVIOR              | Children    |
+| ZOOLANDER FICTION           | Children    |
+| ALICE FANTASIA              | Classics    |
+| ARIZONA BANG                | Classics    |
+| BEAST HUNCHBACK             | Classics    |
+| BOUND CHEAPER               | Classics    |
+| CANDIDATE PERDITION         | Classics    |
+| CENTER DINOSAUR             | Classics    |
+| COLOR PHILADELPHIA          | Classics    |
+| CONSPIRACY SPIRIT           | Classics    |
+| CORE SUIT                   | Classics    |
+| CREEPERS KANE               | Classics    |
+| CRUELTY UNFORGIVEN          | Classics    |
+| DETECTIVE VISION            | Classics    |
+| DRACULA CRYSTAL             | Classics    |
+| DYNAMITE TARZAN             | Classics    |
+| EXTRAORDINARY CONQUERER     | Classics    |
+| FROST HEAD                  | Classics    |
+| GALAXY SWEETHEARTS          | Classics    |
+| GILBERT PELICAN             | Classics    |
+| GILMORE BOILED              | Classics    |
+| HOLY TADPOLE                | Classics    |
+| HOPE TOOTSIE                | Classics    |
+| HYDE DOCTOR                 | Classics    |
+| IRON MOON                   | Classics    |
+| ISLAND EXORCIST             | Classics    |
+| JEEPERS WEDDING             | Classics    |
+| JEOPARDY ENCINO             | Classics    |
+| JERK PAYCHECK               | Classics    |
+| JINGLE SAGEBRUSH            | Classics    |
+| LEAGUE HELLFIGHTERS         | Classics    |
+| LIGHTS DEER                 | Classics    |
+| LOATHING LEGALLY            | Classics    |
+| LOVELY JINGLE               | Classics    |
+| LOVER TRUMAN                | Classics    |
+| MAGNIFICENT CHITTY          | Classics    |
+| MALKOVICH PET               | Classics    |
+| MILLION ACE                 | Classics    |
+| MUSKETEERS WAIT             | Classics    |
+| OCTOBER SUBMARINE           | Classics    |
+| PAJAMA JAWBREAKER           | Classics    |
+| PATIENT SISTER              | Classics    |
+| PREJUDICE OLEANDER          | Classics    |
+| REQUIEM TYCOON              | Classics    |
+| RIGHT CRANES                | Classics    |
+| ROOTS REMEMBER              | Classics    |
+| SLING LUKE                  | Classics    |
+| SNATCHERS MONTEZUMA         | Classics    |
+| SPIKING ELEMENT             | Classics    |
+| STEEL SANTA                 | Classics    |
+| SUMMER SCARFACE             | Classics    |
+| TADPOLE PARK                | Classics    |
+| TIMBERLAND SKY              | Classics    |
+| TOMORROW HUSTLER            | Classics    |
+| TOWERS HURRICANE            | Classics    |
+| VOLUME HOUSE                | Classics    |
+| VOYAGE LEGALLY              | Classics    |
+| WASTELAND DIVINE            | Classics    |
+| WESTWARD SEABISCUIT         | Classics    |
+| AIRPLANE SIERRA             | Comedy      |
+| ANTHEM LUKE                 | Comedy      |
+| BRINGING HYSTERICAL         | Comedy      |
+| CAPER MOTIONS               | Comedy      |
+| CAT CONEHEADS               | Comedy      |
+| CLOSER BANG                 | Comedy      |
+| CONNECTION MICROCOSMOS      | Comedy      |
+| CONTROL ANTHEM              | Comedy      |
+| CRAZY HOME                  | Comedy      |
+| DADDY PITTSBURGH            | Comedy      |
+| DOOM DANCING                | Comedy      |
+| DOWNHILL ENOUGH             | Comedy      |
+| DYING MAKER                 | Comedy      |
+| ELEMENT FREDDY              | Comedy      |
+| FERRIS MOTHER               | Comedy      |
+| FIREBALL PHILADELPHIA       | Comedy      |
+| FLINTSTONES HAPPINESS       | Comedy      |
+| FRANKENSTEIN STRANGER       | Comedy      |
+| FREEDOM CLEOPATRA           | Comedy      |
+| GOLD RIVER                  | Comedy      |
+| GROUNDHOG UNCUT             | Comedy      |
+| GUNFIGHT MOON               | Comedy      |
+| HATE HANDICAP               | Comedy      |
+| HEAVEN FREEDOM              | Comedy      |
+| HEDWIG ALTER                | Comedy      |
+| HURRICANE AFFAIR            | Comedy      |
+| HUSTLER PARTY               | Comedy      |
+| JAWS HARRY                  | Comedy      |
+| KNOCK WARLOCK               | Comedy      |
+| LIFE TWISTED                | Comedy      |
+| LION UNCUT                  | Comedy      |
+| LONELY ELEPHANT             | Comedy      |
+| MALLRATS UNITED             | Comedy      |
+| MEMENTO ZOOLANDER           | Comedy      |
+| MULAN MOON                  | Comedy      |
+| MYSTIC TRUMAN               | Comedy      |
+| OPERATION OPERATION         | Comedy      |
+| PARADISE SABRINA            | Comedy      |
+| PARTY KNOCK                 | Comedy      |
+| PERFECT GROOVE              | Comedy      |
+| PINOCCHIO SIMON             | Comedy      |
+| PURE RUNNER                 | Comedy      |
+| RUSHMORE MERMAID            | Comedy      |
+| SADDLE ANTITRUST            | Comedy      |
+| SATURN NAME                 | Comedy      |
+| SEARCHERS WAIT              | Comedy      |
+| SNATCH SLIPPER              | Comedy      |
+| STAGE WORLD                 | Comedy      |
+| STRICTLY SCARFACE           | Comedy      |
+| SUBMARINE BED               | Comedy      |
+| SWEDEN SHINING              | Comedy      |
+| TRAINSPOTTING STRANGERS     | Comedy      |
+| TRAMP OTHERS                | Comedy      |
+| VALLEY PACKER               | Comedy      |
+| VELVET TERMINATOR           | Comedy      |
+| VERTIGO NORTHWEST           | Comedy      |
+| WISDOM WORKER               | Comedy      |
+| ZORRO ARK                   | Comedy      |
+| ACADEMY DINOSAUR            | Documentary |
+| ADAPTATION HOLES            | Documentary |
+| ARMY FLINTSTONES            | Documentary |
+| BEACH HEARTBREAKERS         | Documentary |
+| BED HIGHBALL                | Documentary |
+| BILL OTHERS                 | Documentary |
+| BONNIE HOLOCAUST            | Documentary |
+| BROTHERHOOD BLANKET         | Documentary |
+| CAUSE DATE                  | Documentary |
+| CHICKEN HELLFIGHTERS        | Documentary |
+| CIDER DESIRE                | Documentary |
+| CLERKS ANGELS               | Documentary |
+| COAST RAINBOW               | Documentary |
+| CUPBOARD SINNERS            | Documentary |
+| DANCING FEVER               | Documentary |
+| DEEP CRUSADE                | Documentary |
+| DELIVERANCE MULHOLLAND      | Documentary |
+| DOZEN LION                  | Documentary |
+| DUFFEL APOCALYPSE           | Documentary |
+| EGG IGBY                    | Documentary |
+| EXPENDABLE STALLION         | Documentary |
+| FRENCH HOLIDAY              | Documentary |
+| HALLOWEEN NUTS              | Documentary |
+| HARDLY ROBBERS              | Documentary |
+| HAWK CHILL                  | Documentary |
+| HEAVYWEIGHTS BEAST          | Documentary |
+| HOMEWARD CIDER              | Documentary |
+| HUNTER ALTER                | Documentary |
+| INDEPENDENCE HOTEL          | Documentary |
+| INTOLERABLE INTENTIONS      | Documentary |
+| KILL BROTHERHOOD            | Documentary |
+| MADISON TRAP                | Documentary |
+| MAJESTIC FLOATS             | Documentary |
+| METAL ARMAGEDDON            | Documentary |
+| MIDSUMMER GROUNDHOG         | Documentary |
+| MIGHTY LUCK                 | Documentary |
+| MOD SECRETARY               | Documentary |
+| MODERN DORADO               | Documentary |
+| NATIONAL STORY              | Documentary |
+| NEWSIES STORY               | Documentary |
+| NORTH TEQUILA               | Documentary |
+| NOTORIOUS REUNION           | Documentary |
+| PACIFIC AMISTAD             | Documentary |
+| PELICAN COMFORTS            | Documentary |
+| POCUS PULP                  | Documentary |
+| PRINCESS GIANT              | Documentary |
+| QUILLS BULL                 | Documentary |
+| RAIDERS ANTITRUST           | Documentary |
+| RAINBOW SHOCK               | Documentary |
+| ROAD ROXANNE                | Documentary |
+| SAGEBRUSH CLUELESS          | Documentary |
+| SECRET GROUNDHOG            | Documentary |
+| SHIP WONDERLAND             | Documentary |
+| SHOW LORD                   | Documentary |
+| SMOKING BARBARELLA          | Documentary |
+| SPOILERS HELLFIGHTERS       | Documentary |
+| STREAK RIDGEMONT            | Documentary |
+| THIN SAGEBRUSH              | Documentary |
+| UNITED PILOT                | Documentary |
+| UNTOUCHABLES SUNRISE        | Documentary |
+| VILLAIN DESPERATE           | Documentary |
+| VIRGINIAN PLUTO             | Documentary |
+| WAGON JAWS                  | Documentary |
+| WARS PLUTO                  | Documentary |
+| WEDDING APOLLO              | Documentary |
+| WIFE TURN                   | Documentary |
+| WRATH MILE                  | Documentary |
+| YOUNG LANGUAGE              | Documentary |
+| APOLLO TEEN                 | Drama       |
+| BEAUTY GREASE               | Drama       |
+| BEETHOVEN EXORCIST          | Drama       |
+| BLADE POLISH                | Drama       |
+| BRIGHT ENCOUNTERS           | Drama       |
+| BUNCH MINDS                 | Drama       |
+| CHILL LUCK                  | Drama       |
+| CHITTY LOCK                 | Drama       |
+| CONEHEADS SMOOCHY           | Drama       |
+| CONFESSIONS MAGUIRE         | Drama       |
+| CONQUERER NUTS              | Drama       |
+| CRAFT OUTFIELD              | Drama       |
+| DALMATIONS SWEDEN           | Drama       |
+| DARKNESS WAR                | Drama       |
+| DECEIVER BETRAYED           | Drama       |
+| DESTINATION JERK            | Drama       |
+| DIARY PANIC                 | Drama       |
+| EDGE KISSING                | Drama       |
+| ENCOUNTERS CURTAIN          | Drama       |
+| GOLDFINGER SENSIBILITY      | Drama       |
+| GONE TROUBLE                | Drama       |
+| GREEDY ROOTS                | Drama       |
+| HANGING DEEP                | Drama       |
+| HAROLD FRENCH               | Drama       |
+| HARRY IDAHO                 | Drama       |
+| HOBBIT ALIEN                | Drama       |
+| HUNCHBACK IMPOSSIBLE        | Drama       |
+| JACKET FRISCO               | Drama       |
+| KWAI HOMEWARD               | Drama       |
+| LEBOWSKI SOLDIERS           | Drama       |
+| LIES TREATMENT              | Drama       |
+| LUCK OPUS                   | Drama       |
+| MOB DUFFEL                  | Drama       |
+| NECKLACE OUTBREAK           | Drama       |
+| NOTTING SPEAKEASY           | Drama       |
+| ORIENT CLOSER               | Drama       |
+| PATHS CONTROL               | Drama       |
+| PAYCHECK WAIT               | Drama       |
+| PITY BOUND                  | Drama       |
+| QUEEN LUKE                  | Drama       |
+| RACER EGG                   | Drama       |
+| REUNION WITCHES             | Drama       |
+| ROCKY WAR                   | Drama       |
+| SAINTS BRIDE                | Drama       |
+| SAVANNAH TOWN               | Drama       |
+| SCORPION APOLLO             | Drama       |
+| SEA VIRGIN                  | Drama       |
+| SEATTLE EXPECATIONS         | Drama       |
+| SHOOTIST SUPERFLY           | Drama       |
+| SLACKER LIAISONS            | Drama       |
+| SOMETHING DUCK              | Drama       |
+| SPICE SORORITY              | Drama       |
+| TENENBAUMS COMMAND          | Drama       |
+| TORQUE BOUND                | Drama       |
+| TRANSLATION SUMMER          | Drama       |
+| TREATMENT JEKYLL            | Drama       |
+| UNFAITHFUL KILL             | Drama       |
+| VIETNAM SMOOCHY             | Drama       |
+| VIRGIN DAISY                | Drama       |
+| WARDROBE PHANTOM            | Drama       |
+| WEST LION                   | Drama       |
+| WITCHES PANIC               | Drama       |
+| AFRICAN EGG                 | Family      |
+| APACHE DIVINE               | Family      |
+| ATLANTIS CAUSE              | Family      |
+| BAKED CLEOPATRA             | Family      |
+| BANG KWAI                   | Family      |
+| BEDAZZLED MARRIED           | Family      |
+| BILKO ANONYMOUS             | Family      |
+| BLANKET BEVERLY             | Family      |
+| BLOOD ARGONAUTS             | Family      |
+| BLUES INSTINCT              | Family      |
+| BRAVEHEART HUMAN            | Family      |
+| CHASING FIGHT               | Family      |
+| CHISUM BEHAVIOR             | Family      |
+| CHOCOLAT HARRY              | Family      |
+| CONFUSED CANDLES            | Family      |
+| CONVERSATION DOWNHILL       | Family      |
+| DATE SPEED                  | Family      |
+| DINOSAUR SECRETARY          | Family      |
+| DUMBO LUST                  | Family      |
+| EARRING INSTINCT            | Family      |
+| EFFECT GLADIATOR            | Family      |
+| FEUD FROGMEN                | Family      |
+| FINDING ANACONDA            | Family      |
+| GABLES METROPOLIS           | Family      |
+| GANDHI KWAI                 | Family      |
+| GLADIATOR WESTWARD          | Family      |
+| GREASE YOUTH                | Family      |
+| HALF OUTFIELD               | Family      |
+| HOCUS FRIDA                 | Family      |
+| HOMICIDE PEACH              | Family      |
+| HOUSE DYNAMITE              | Family      |
+| HUNTING MUSKETEERS          | Family      |
+| INDIAN LOVE                 | Family      |
+| JASON TRAP                  | Family      |
+| JEDI BENEATH                | Family      |
+| KILLER INNOCENT             | Family      |
+| KING EVOLUTION              | Family      |
+| LOLITA WORLD                | Family      |
+| LOUISIANA HARRY             | Family      |
+| MAGUIRE APACHE              | Family      |
+| MANCHURIAN CURTAIN          | Family      |
+| MOVIE SHAKESPEARE           | Family      |
+| MUSIC BOONDOCK              | Family      |
+| NATURAL STOCK               | Family      |
+| NETWORK PEAK                | Family      |
+| ODDS BOOGIE                 | Family      |
+| OPPOSITE NECKLACE           | Family      |
+| PILOT HOOSIERS              | Family      |
+| PITTSBURGH HUNCHBACK        | Family      |
+| PRESIDENT BANG              | Family      |
+| PRIX UNDEFEATED             | Family      |
+| RAGE GAMES                  | Family      |
+| RANGE MOONWALKER            | Family      |
+| REMEMBER DIARY              | Family      |
+| RESURRECTION SILVERADO      | Family      |
+| ROBBERY BRIGHT              | Family      |
+| RUSH GOODFELLAS             | Family      |
+| SECRETS PARADISE            | Family      |
+| SENSIBILITY REAR            | Family      |
+| SIEGE MADRE                 | Family      |
+| SLUMS DUCK                  | Family      |
+| SOUP WISDOM                 | Family      |
+| SPARTACUS CHEAPER           | Family      |
+| SPINAL ROCKY                | Family      |
+| SPLASH GUMP                 | Family      |
+| SUNSET RACER                | Family      |
+| SUPER WYOMING               | Family      |
+| VIRTUAL SPOILERS            | Family      |
+| WILLOW TRACY                | Family      |
+| AGENT TRUMAN                | Foreign     |
+| ALAMO VIDEOTAPE             | Foreign     |
+| ALIEN CENTER                | Foreign     |
+| ALLEY EVOLUTION             | Foreign     |
+| BABY HALL                   | Foreign     |
+| BALLROOM MOCKINGBIRD        | Foreign     |
+| BROOKLYN DESERT             | Foreign     |
+| BUGSY SONG                  | Foreign     |
+| CALENDAR GUNFIGHT           | Foreign     |
+| CATCH AMISTAD               | Foreign     |
+| CHOCOLATE DUCK              | Foreign     |
+| COMMAND DARLING             | Foreign     |
+| COWBOY DOOM                 | Foreign     |
+| CROSSING DIVORCE            | Foreign     |
+| CRYSTAL BREAKING            | Foreign     |
+| CYCLONE FAMILY              | Foreign     |
+| DANGEROUS UPTOWN            | Foreign     |
+| DOUBTFIRE LABYRINTH         | Foreign     |
+| EVERYONE CRAFT              | Foreign     |
+| FICTION CHRISTMAS           | Foreign     |
+| FRIDA SLIPPER               | Foreign     |
+| GENTLEMEN STAGE             | Foreign     |
+| GRAPES FURY                 | Foreign     |
+| GREEK EVERYONE              | Foreign     |
+| HAPPINESS UNITED            | Foreign     |
+| HELLFIGHTERS SIERRA         | Foreign     |
+| HIGHBALL POTTER             | Foreign     |
+| HOLIDAY GAMES               | Foreign     |
+| HOOSIERS BIRDCAGE           | Foreign     |
+| HOTEL HAPPINESS             | Foreign     |
+| HUNGER ROOF                 | Foreign     |
+| ILLUSION AMELIE             | Foreign     |
+| IMPOSSIBLE PREJUDICE        | Foreign     |
+| INFORMER DOUBLE             | Foreign     |
+| INNOCENT USUAL              | Foreign     |
+| INTRIGUE WORST              | Foreign     |
+| JET NEIGHBORS               | Foreign     |
+| KANE EXORCIST               | Foreign     |
+| KISS GLORY                  | Foreign     |
+| LOSE INCH                   | Foreign     |
+| LOST BIRD                   | Foreign     |
+| MADNESS ATTACKS             | Foreign     |
+| MATRIX SNOWMAN              | Foreign     |
+| MAUDE MOD                   | Foreign     |
+| MEET CHOCOLATE              | Foreign     |
+| MIXED DOORS                 | Foreign     |
+| MOON BUNCH                  | Foreign     |
+| MULHOLLAND BEAST            | Foreign     |
+| MUPPET MILE                 | Foreign     |
+| NEWTON LABYRINTH            | Foreign     |
+| OPUS ICE                    | Foreign     |
+| ORANGE GRAPES               | Foreign     |
+| PAST SUICIDES               | Foreign     |
+| PEARL DESTINY               | Foreign     |
+| PET HAUNTING                | Foreign     |
+| POLLOCK DELIVERANCE         | Foreign     |
+| PURPLE MOVIE                | Foreign     |
+| RESERVOIR ADAPTATION        | Foreign     |
+| ROCKETEER MOTHER            | Foreign     |
+| SCHOOL JACKET               | Foreign     |
+| SCISSORHANDS SLUMS          | Foreign     |
+| SHOCK CABIN                 | Foreign     |
+| SHREK LICENSE               | Foreign     |
+| SORORITY QUEEN              | Foreign     |
+| STEPMOM DREAM               | Foreign     |
+| TOWN ARK                    | Foreign     |
+| TRAP GUYS                   | Foreign     |
+| USUAL UNTOUCHABLES          | Foreign     |
+| VISION TORQUE               | Foreign     |
+| WAR NOTTING                 | Foreign     |
+| WASH HEAVENLY               | Foreign     |
+| WHALE BIKINI                | Foreign     |
+| WONDERFUL DROP              | Foreign     |
+| AUTUMN CROW                 | Games       |
+| BULWORTH COMMANDMENTS       | Games       |
+| CANDLES GRAPES              | Games       |
+| CHICAGO NORTH               | Games       |
+| CREATURES SHAKESPEARE       | Games       |
+| CURTAIN VIDEOTAPE           | Games       |
+| DARLING BREAKING            | Games       |
+| DAWN POND                   | Games       |
+| DAZED PUNK                  | Games       |
+| DETAILS PACKER              | Games       |
+| DIRTY ACE                   | Games       |
+| DIVINE RESURRECTION         | Games       |
+| DWARFS ALTER                | Games       |
+| ENCINO ELF                  | Games       |
+| FANTASIA PARK               | Games       |
+| FEATHERS METAL              | Games       |
+| FEVER EMPIRE                | Games       |
+| FIRE WOLVES                 | Games       |
+| FORWARD TEMPLE              | Games       |
+| GATHERING CALENDAR          | Games       |
+| GLORY TRACY                 | Games       |
+| GRINCH MASSAGE              | Games       |
+| GRIT CLOCKWORK              | Games       |
+| GUN BONNIE                  | Games       |
+| HAUNTING PIANIST            | Games       |
+| HEAD STRANGER               | Games       |
+| HUMAN GRAFFITI              | Games       |
+| ICE CROSSING                | Games       |
+| JERICHO MULAN               | Games       |
+| LADYBUGS ARMAGEDDON         | Games       |
+| LAMBS CINCINATTI            | Games       |
+| MADRE GABLES                | Games       |
+| MALTESE HOPE                | Games       |
+| MARS ROMAN                  | Games       |
+| MASSACRE USUAL              | Games       |
+| MONSOON CAUSE               | Games       |
+| MOONSHINE CABIN             | Games       |
+| MOONWALKER FOOL             | Games       |
+| NAME DETECTIVE              | Games       |
+| NIGHTMARE CHILL             | Games       |
+| OUTBREAK DIVINE             | Games       |
+| PANKY SUBMARINE             | Games       |
+| PIZZA JUMANJI               | Games       |
+| PRIVATE DROP                | Games       |
+| PSYCHO SHRUNK               | Games       |
+| ROOF CHAMPION               | Games       |
+| ROUGE SQUAD                 | Games       |
+| ROXANNE REBEL               | Games       |
+| SASSY PACKER                | Games       |
+| SEVEN SWARM                 | Games       |
+| SLEUTH ORIENT               | Games       |
+| SPY MILE                    | Games       |
+| STAMPEDE DISTURBING         | Games       |
+| STATE WASTELAND             | Games       |
+| SUIT WALLS                  | Games       |
+| TYCOON GATHERING            | Games       |
+| VANILLA DAY                 | Games       |
+| VIDEOTAPE ARSENIC           | Games       |
+| VOLCANO TEXAS               | Games       |
+| WANDA CHAMBER               | Games       |
+| WIND PHANTOM                | Games       |
+| ACE GOLDFINGER              | Horror      |
+| AFFAIR PREJUDICE            | Horror      |
+| AIRPORT POLLOCK             | Horror      |
+| ALABAMA DEVIL               | Horror      |
+| ALI FOREVER                 | Horror      |
+| ANALYZE HOOSIERS            | Horror      |
+| ANYTHING SAVANNAH           | Horror      |
+| ARABIA DOGMA                | Horror      |
+| ARACHNOPHOBIA ROLLERCOASTER | Horror      |
+| BEHAVIOR RUNAWAY            | Horror      |
+| BOWFINGER GABLES            | Horror      |
+| CARRIE BUNCH                | Horror      |
+| COMMANDMENTS EXPRESS        | Horror      |
+| DESERT POSEIDON             | Horror      |
+| DRUMS DYNAMITE              | Horror      |
+| EGYPT TENENBAUMS            | Horror      |
+| ELEPHANT TROJAN             | Horror      |
+| FAMILY SWEET                | Horror      |
+| FIDELITY DEVIL              | Horror      |
+| FREDDY STORM                | Horror      |
+| GASLIGHT CRUSADE            | Horror      |
+| HIGH ENCINO                 | Horror      |
+| JAPANESE RUN                | Horror      |
+| KARATE MOON                 | Horror      |
+| KENTUCKIAN GIANT            | Horror      |
+| LADY STAGE                  | Horror      |
+| LOLA AGENT                  | Horror      |
+| LOVE SUICIDES               | Horror      |
+| MONTEREY LABYRINTH          | Horror      |
+| MOTIONS DETAILS             | Horror      |
+| PANIC CLUB                  | Horror      |
+| PARIS WEEKEND               | Horror      |
+| PATTON INTERVIEW            | Horror      |
+| PULP BEVERLY                | Horror      |
+| REAP UNFAITHFUL             | Horror      |
+| REEF SALUTE                 | Horror      |
+| ROCK INSTINCT               | Horror      |
+| ROLLERCOASTER BRINGING      | Horror      |
+| RULES HUMAN                 | Horror      |
+| SIMON NORTH                 | Horror      |
+| SINNERS ATLANTIS            | Horror      |
+| SLEEPING SUSPECTS           | Horror      |
+| SPIRIT FLINTSTONES          | Horror      |
+| STRANGERS GRAFFITI          | Horror      |
+| STREETCAR INTENTIONS        | Horror      |
+| SWARM GOLD                  | Horror      |
+| TARZAN VIDEOTAPE            | Horror      |
+| TEMPLE ATTRACTION           | Horror      |
+| TEXAS WATCH                 | Horror      |
+| TRAIN BUNCH                 | Horror      |
+| TREASURE COMMAND            | Horror      |
+| UNDEFEATED DALMATIONS       | Horror      |
+| WATERSHIP FRONTIER          | Horror      |
+| WORLD LEATHERNECKS          | Horror      |
+| YENTL IDAHO                 | Horror      |
+| ZHIVAGO CORE                | Horror      |
+| ALASKA PHANTOM              | Music       |
+| ALONE TRIP                  | Music       |
+| AMELIE HELLFIGHTERS         | Music       |
+| BALLOON HOMEWARD            | Music       |
+| BANGER PINOCCHIO            | Music       |
+| BIRCH ANTITRUST             | Music       |
+| BIRDCAGE CASPER             | Music       |
+| BOOGIE AMELIE               | Music       |
+| CHAMBER ITALIAN             | Music       |
+| CLONES PINOCCHIO            | Music       |
+| CLUE GRAIL                  | Music       |
+| CONFIDENTIAL INTERVIEW      | Music       |
+| DEER VIRGINIAN              | Music       |
+| DORADO NOTTING              | Music       |
+| DRIVING POLISH              | Music       |
+| ELF MURDER                  | Music       |
+| ENEMY ODDS                  | Music       |
+| FREAKY POCUS                | Music       |
+| GO PURPLE                   | Music       |
+| GREATEST NORTH              | Music       |
+| GROSSE WONDERFUL            | Music       |
+| HANOVER GALAXY              | Music       |
+| HEAVENLY GUN                | Music       |
+| HOME PITY                   | Music       |
+| IMPACT ALADDIN              | Music       |
+| INSIDER ARIZONA             | Music       |
+| JAWBREAKER BROOKLYN         | Music       |
+| LEGEND JEDI                 | Music       |
+| LUCKY FLYING                | Music       |
+| MASKED BUBBLE               | Music       |
+| MINORITY KISS               | Music       |
+| MONSTER SPARTACUS           | Music       |
+| OLEANDER CLUE               | Music       |
+| OUTFIELD MASSACRE           | Music       |
+| PERSONAL LADYBUGS           | Music       |
+| REBEL AIRPORT               | Music       |
+| REDS POCUS                  | Music       |
+| ROMAN PUNK                  | Music       |
+| RUNNER MADIGAN              | Music       |
+| SCALAWAG DUCK               | Music       |
+| SILENCE KANE                | Music       |
+| SONG HEDWIG                 | Music       |
+| TAXI KICK                   | Music       |
+| TELEGRAPH VOYAGE            | Music       |
+| TERMINATOR CLUB             | Music       |
+| UNCUT SUICIDES              | Music       |
+| VANISHING ROCKY             | Music       |
+| WIZARD COLDBLOODED          | Music       |
+| WON DARES                   | Music       |
+| WORDS HUNTER                | Music       |
+| YOUTH KICK                  | Music       |
+| AMISTAD MIDSUMMER           | New         |
+| ANGELS LIFE                 | New         |
+| APOCALYPSE FLAMINGOS        | New         |
+| ATTRACTION NEWTON           | New         |
+| BIRDS PERDITION             | New         |
+| BOULEVARD MOB               | New         |
+| BRANNIGAN SUNRISE           | New         |
+| BREAKFAST GOLDFINGER        | New         |
+| BREAKING HOME               | New         |
+| BUTCH PANTHER               | New         |
+| BUTTERFLY CHOCOLAT          | New         |
+| CHAPLIN LICENSE             | New         |
+| CHINATOWN GLADIATOR         | New         |
+| CLEOPATRA DEVIL             | New         |
+| CLYDE THEORY                | New         |
+| DAY UNFAITHFUL              | New         |
+| DESTINY SATURDAY            | New         |
+| DRAGONFLY STRANGERS         | New         |
+| EAGLES PANKY                | New         |
+| EARTH VISION                | New         |
+| ENDING CROWDS               | New         |
+| EVE RESURRECTION            | New         |
+| FATAL HAUNTED               | New         |
+| FLAMINGOS CONNECTICUT       | New         |
+| FLASH WARS                  | New         |
+| FRONTIER CABIN              | New         |
+| GODFATHER DIARY             | New         |
+| HOURS RAGE                  | New         |
+| IDAHO LOVE                  | New         |
+| INTERVIEW LIAISONS          | New         |
+| JEKYLL FROGMEN              | New         |
+| JUMANJI BLADE               | New         |
+| JUNGLE CLOSER               | New         |
+| LOVERBOY ATTACKS            | New         |
+| MAIDEN HOME                 | New         |
+| MANNEQUIN WORST             | New         |
+| MASK PEACH                  | New         |
+| MINE TITANS                 | New         |
+| MONEY HAROLD                | New         |
+| NUTS TIES                   | New         |
+| OKLAHOMA JUMANJI            | New         |
+| PHANTOM GLORY               | New         |
+| PIANIST OUTFIELD            | New         |
+| PLATOON INSTINCT            | New         |
+| PLUTO OLEANDER              | New         |
+| REDEMPTION COMFORTS         | New         |
+| RIDGEMONT SUBMARINE         | New         |
+| RUN PACIFIC                 | New         |
+| RUNAWAY TENENBAUMS          | New         |
+| SALUTE APOLLO               | New         |
+| SAMURAI LION                | New         |
+| SLEEPY JAPANESE             | New         |
+| STING PERSONAL              | New         |
+| STOCK GLASS                 | New         |
+| TROOPERS METAL              | New         |
+| UNBREAKABLE KARATE          | New         |
+| VAMPIRE WHALE               | New         |
+| VANISHED GARDEN             | New         |
+| VARSITY TRIP                | New         |
+| VOICE PEACH                 | New         |
+| WAKE JAWS                   | New         |
+| WILD APOLLO                 | New         |
+| WYOMING STORM               | New         |
+| ANNIE IDENTITY              | Sci-Fi      |
+| ARMAGEDDON LOST             | Sci-Fi      |
+| ATTACKS HATE                | Sci-Fi      |
+| BADMAN DAWN                 | Sci-Fi      |
+| BARBARELLA STREETCAR        | Sci-Fi      |
+| BEVERLY OUTLAW              | Sci-Fi      |
+| BINGO TALENTED              | Sci-Fi      |
+| BLINDNESS GUN               | Sci-Fi      |
+| CAMELOT VACATION            | Sci-Fi      |
+| CHAINSAW UPTOWN             | Sci-Fi      |
+| CHARADE DUFFEL              | Sci-Fi      |
+| CHARIOTS CONSPIRACY         | Sci-Fi      |
+| CHEAPER CLYDE               | Sci-Fi      |
+| CINCINATTI WHISPERER        | Sci-Fi      |
+| CITIZEN SHREK               | Sci-Fi      |
+| COLDBLOODED DARLING         | Sci-Fi      |
+| CONNECTICUT TRAMP           | Sci-Fi      |
+| CROWDS TELEMARK             | Sci-Fi      |
+| DAISY MENAGERIE             | Sci-Fi      |
+| DISTURBING SCARFACE         | Sci-Fi      |
+| DIVIDE MONSTER              | Sci-Fi      |
+| DOLLS RAGE                  | Sci-Fi      |
+| ENGLISH BULWORTH            | Sci-Fi      |
+| EXPRESS LONELY              | Sci-Fi      |
+| EYES DRIVING                | Sci-Fi      |
+| FIDDLER LOST                | Sci-Fi      |
+| FISH OPUS                   | Sci-Fi      |
+| FRISCO FORREST              | Sci-Fi      |
+| GARDEN ISLAND               | Sci-Fi      |
+| GOLDMINE TYCOON             | Sci-Fi      |
+| GOODFELLAS SALUTE           | Sci-Fi      |
+| GRAFFITI LOVE               | Sci-Fi      |
+| GUYS FALCON                 | Sci-Fi      |
+| HAMLET WISDOM               | Sci-Fi      |
+| HANKY OCTOBER               | Sci-Fi      |
+| HOLLOW JEOPARDY             | Sci-Fi      |
+| IDENTITY LOVER              | Sci-Fi      |
+| LICENSE WEEKEND             | Sci-Fi      |
+| MARRIED GO                  | Sci-Fi      |
+| METROPOLIS COMA             | Sci-Fi      |
+| MOURNING PURPLE             | Sci-Fi      |
+| NEMO CAMPUS                 | Sci-Fi      |
+| NONE SPIKING                | Sci-Fi      |
+| OPEN AFRICAN                | Sci-Fi      |
+| PANTHER REDS                | Sci-Fi      |
+| RAGING AIRPLANE             | Sci-Fi      |
+| RANDOM GO                   | Sci-Fi      |
+| REIGN GENTLEMEN             | Sci-Fi      |
+| SILVERADO GOLDFINGER        | Sci-Fi      |
+| SOLDIERS EVOLUTION          | Sci-Fi      |
+| SPIRITED CASUALTIES         | Sci-Fi      |
+| STALLION SUNDANCE           | Sci-Fi      |
+| SUICIDES SILENCE            | Sci-Fi      |
+| SUN CONFESSIONS             | Sci-Fi      |
+| TITANS JERK                 | Sci-Fi      |
+| TROJAN TOMORROW             | Sci-Fi      |
+| UNFORGIVEN ZOOLANDER        | Sci-Fi      |
+| VACATION BOONDOCK           | Sci-Fi      |
+| WEEKEND PERSONAL            | Sci-Fi      |
+| WHISPERER GIANT             | Sci-Fi      |
+| WONDERLAND CHRISTMAS        | Sci-Fi      |
+| ALADDIN CALENDAR            | Sports      |
+| ANONYMOUS HUMAN             | Sports      |
+| ARTIST COLDBLOODED          | Sports      |
+| BUBBLE GROSSE               | Sports      |
+| CALIFORNIA BIRDS            | Sports      |
+| CARIBBEAN LIBERTY           | Sports      |
+| CHANCE RESURRECTION         | Sports      |
+| CONGENIALITY QUEST          | Sports      |
+| CRANES RESERVOIR            | Sports      |
+| CRUSADE HONEY               | Sports      |
+| DIVORCE SHINING             | Sports      |
+| DRIVER ANNIE                | Sports      |
+| DROP WATERFRONT             | Sports      |
+| DUDE BLINDNESS              | Sports      |
+| DURHAM PANKY                | Sports      |
+| ELIZABETH SHANE             | Sports      |
+| EVOLUTION ALTER             | Sports      |
+| EXORCIST STING              | Sports      |
+| FLATLINERS KILLER           | Sports      |
+| FLIGHT LIES                 | Sports      |
+| GLEAMING JAWBREAKER         | Sports      |
+| GRACELAND DYNAMITE          | Sports      |
+| GROOVE FICTION              | Sports      |
+| GUNFIGHTER MUSSOLINI        | Sports      |
+| HOLES BRANNIGAN             | Sports      |
+| HONEY TIES                  | Sports      |
+| HYSTERICAL GRAIL            | Sports      |
+| IMAGE PRINCESS              | Sports      |
+| INSTINCT AIRPORT            | Sports      |
+| JADE BUNCH                  | Sports      |
+| JOON NORTHWEST              | Sports      |
+| KRAMER CHOCOLATE            | Sports      |
+| LESSON CLEOPATRA            | Sports      |
+| LIBERTY MAGNIFICENT         | Sports      |
+| LOSER HUSTLER               | Sports      |
+| MERMAID INSECTS             | Sports      |
+| MILE MULAN                  | Sports      |
+| MOSQUITO ARMAGEDDON         | Sports      |
+| MOTHER OLEANDER             | Sports      |
+| MUMMY CREATURES             | Sports      |
+| MUSSOLINI SPOILERS          | Sports      |
+| NEIGHBORS CHARADE           | Sports      |
+| NORTHWEST POLISH            | Sports      |
+| NOVOCAINE FLIGHT            | Sports      |
+| PEACH INNOCENT              | Sports      |
+| PEAK FOREVER                | Sports      |
+| PERDITION FARGO             | Sports      |
+| PHILADELPHIA WIFE           | Sports      |
+| PICKUP DRIVING              | Sports      |
+| PIRATES ROXANNE             | Sports      |
+| POSEIDON FOREVER            | Sports      |
+| RECORDS ZORRO               | Sports      |
+| RIDER CADDYSHACK            | Sports      |
+| RIVER OUTLAW                | Sports      |
+| ROSES TREASURE              | Sports      |
+| SATISFACTION CONFIDENTIAL   | Sports      |
+| SATURDAY LAMBS              | Sports      |
+| SEABISCUIT PUNK             | Sports      |
+| SECRETARY ROUGE             | Sports      |
+| SENSE GREEK                 | Sports      |
+| SHAKESPEARE SADDLE          | Sports      |
+| SIERRA DIVIDE               | Sports      |
+| SLIPPER FIDELITY            | Sports      |
+| SMOOCHY CONTROL             | Sports      |
+| SQUAD FISH                  | Sports      |
+| STAR OPERATION              | Sports      |
+| STEERS ARMAGEDDON           | Sports      |
+| STRAIGHT HOURS              | Sports      |
+| TALENTED HOMICIDE           | Sports      |
+| TIGHTS DAWN                 | Sports      |
+| TOURIST PELICAN             | Sports      |
+| TRADING PINOCCHIO           | Sports      |
+| TUXEDO MILE                 | Sports      |
+| VICTORY ACADEMY             | Sports      |
+| ARSENIC INDEPENDENCE        | Travel      |
+| BASIC EASY                  | Travel      |
+| BIRD INDEPENDENCE           | Travel      |
+| BOILED DARES                | Travel      |
+| BOONDOCK BALLROOM           | Travel      |
+| BORN SPINAL                 | Travel      |
+| BUCKET BROTHERHOOD          | Travel      |
+| CASABLANCA SUPER            | Travel      |
+| CASSIDY WYOMING             | Travel      |
+| COMA HEAD                   | Travel      |
+| COMFORTS RUSH               | Travel      |
+| CONTACT ANONYMOUS           | Travel      |
+| DESPERATE TRAINSPOTTING     | Travel      |
+| DISCIPLE MOTHER             | Travel      |
+| DRUMLINE CYCLONE            | Travel      |
+| ENOUGH RAGING               | Travel      |
+| ESCAPE METROPOLIS           | Travel      |
+| EXPECATIONS NATURAL         | Travel      |
+| FACTORY DRAGON              | Travel      |
+| FELLOWSHIP AUTUMN           | Travel      |
+| FROGMEN BREAKING            | Travel      |
+| FUGITIVE MAGUIRE            | Travel      |
+| GAMES BOWFINGER             | Travel      |
+| GUMP DATE                   | Travel      |
+| HAUNTED ANTITRUST           | Travel      |
+| HORROR REIGN                | Travel      |
+| IGBY MAKER                  | Travel      |
+| ITALIAN AFRICAN             | Travel      |
+| KICK SAVANNAH               | Travel      |
+| LEATHERNECKS DWARFS         | Travel      |
+| LIAISONS SWEET              | Travel      |
+| LOCK REAR                   | Travel      |
+| MADIGAN DORADO              | Travel      |
+| MOULIN WAKE                 | Travel      |
+| MUSCLE BRIGHT               | Travel      |
+| ORDER BETRAYED              | Travel      |
+| OTHERS SOUP                 | Travel      |
+| OUTLAW HANKY                | Travel      |
+| PAPI NECKLACE               | Travel      |
+| SHANE DARKNESS              | Travel      |
+| SHANGHAI TYCOON             | Travel      |
+| SHAWSHANK BUBBLE            | Travel      |
+| SHINING ROSES               | Travel      |
+| SMILE EARRING               | Travel      |
+| SPEED SUIT                  | Travel      |
+| STONE FIRE                  | Travel      |
+| SUPERFLY TRIP               | Travel      |
+| SWEET BROTHERHOOD           | Travel      |
+| TEEN APOLLO                 | Travel      |
+| TOMATOES HELLFIGHTERS       | Travel      |
+| TRAFFIC HOBBIT              | Travel      |
+| TROUBLE DATE                | Travel      |
+| VALENTINE VANISHING         | Travel      |
+| WINDOW SIDE                 | Travel      |
+| WOLVES DESIRE               | Travel      |
+| WORKER TARZAN               | Travel      |
+| WORKING MICROCOSMOS         | Travel      |
++-----------------------------+-------------+
+1000 rows in set (0.0734 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > SELECT cu.first_name AS nombre_cliente, cu.last_name AS apellido_cliente, COUNT(r.rental_id) AS cantidad_peliculas_rentadas FROM customer cu INNER JOIN rental r ON cu.customer_id = r.customer_id GROUP BY cu.customer_id ORDER BY cantidad_peliculas_rentadas DESC limit 100;
++----------------+------------------+-----------------------------+
+| nombre_cliente | apellido_cliente | cantidad_peliculas_rentadas |
++----------------+------------------+-----------------------------+
+| ELEANOR        | HUNT             |                          46 |
+| KARL           | SEAL             |                          45 |
+| CLARA          | SHAW             |                          42 |
+| MARCIA         | DEAN             |                          42 |
+| TAMMY          | SANDERS          |                          41 |
+| WESLEY         | BULL             |                          40 |
+| SUE            | PETERS           |                          40 |
+| MARION         | SNYDER           |                          39 |
+| RHONDA         | KENNEDY          |                          39 |
+| TIM            | CARY             |                          39 |
+| ELIZABETH      | BROWN            |                          38 |
+| DAISY          | BATES            |                          38 |
+| TOMMY          | COLLAZO          |                          38 |
+| CURTIS         | IRBY             |                          38 |
+| MARSHA         | DOUGLAS          |                          37 |
+| JUNE           | CARROLL          |                          37 |
+| ELSIE          | KELLEY           |                          37 |
+| BRANDON        | HUEY             |                          37 |
+| MARGIE         | WADE             |                          36 |
+| ANGELA         | HERNANDEZ        |                          36 |
+| JUSTIN         | NGO              |                          36 |
+| ALEXANDER      | FENNELL          |                          36 |
+| ROGER          | QUINTANILLA      |                          36 |
+| RUSSELL        | BRINSON          |                          36 |
+| MICHELLE       | CLARK            |                          35 |
+| BILLY          | POULIN           |                          35 |
+| PRISCILLA      | LOWE             |                          35 |
+| ROSEMARY       | SCHMIDT          |                          35 |
+| HARRY          | ARCE             |                          35 |
+| DIANE          | COLLINS          |                          35 |
+| BOBBY          | BOUDREAU         |                          35 |
+| MIKE           | WAY              |                          35 |
+| NAOMI          | JENNINGS         |                          35 |
+| LOUIS          | LEONE            |                          35 |
+| ALMA           | AUSTIN           |                          35 |
+| LOIS           | BUTLER           |                          35 |
+| LESLIE         | SEWARD           |                          35 |
+| STEVE          | MACKENZIE        |                          34 |
+| REGINA         | BERRY            |                          34 |
+| CASEY          | MENA             |                          34 |
+| STACEY         | MONTGOMERY       |                          34 |
+| MINNIE         | ROMERO           |                          34 |
+| GERTRUDE       | CASTILLO         |                          34 |
+| JESSICA        | HALL             |                          34 |
+| JORGE          | OLIVARES         |                          34 |
+| MELISSA        | KING             |                          34 |
+| ANA            | BRADLEY          |                          34 |
+| MORRIS         | MCCARTER         |                          34 |
+| HEIDI          | LARSON           |                          34 |
+| MARTHA         | GONZALEZ         |                          34 |
+| CATHERINE      | CAMPBELL         |                          34 |
+| BRETT          | CORNWELL         |                          34 |
+| JANICE         | WARD             |                          34 |
+| HAZEL          | WARREN           |                          34 |
+| SHERRY         | MARSHALL         |                          34 |
+| RALPH          | MADRIGAL         |                          34 |
+| CARRIE         | PORTER           |                          34 |
+| JOANNE         | ROBERTSON        |                          34 |
+| GRACE          | ELLIS            |                          33 |
+| MARIA          | MILLER           |                          33 |
+| BERNICE        | WILLIS           |                          33 |
+| ARNOLD         | HAVENS           |                          33 |
+| TANYA          | GILBERT          |                          33 |
+| GEORGE         | LINTON           |                          33 |
+| JESSIE         | MILAM            |                          33 |
+| ALEX           | GRESHAM          |                          33 |
+| ALICE          | STEWART          |                          33 |
+| SHERRI         | RHODES           |                          33 |
+| WARREN         | SHERROD          |                          33 |
+| JOY            | GEORGE           |                          33 |
+| CRYSTAL        | FORD             |                          33 |
+| JUDITH         | COX              |                          33 |
+| BARRY          | LOVELACE         |                          33 |
+| JIM            | REA              |                          33 |
+| SARA           | PERRY            |                          33 |
+| JACQUELINE     | LONG             |                          33 |
+| SHAWN          | HEATON           |                          33 |
+| MAXINE         | SILVA            |                          32 |
+| GLENDA         | FRAZIER          |                          32 |
+| LENA           | JENSEN           |                          32 |
+| HELEN          | HARRIS           |                          32 |
+| NICHOLAS       | BARFIELD         |                          32 |
+| HAROLD         | MARTINO          |                          32 |
+| CYNTHIA        | YOUNG            |                          32 |
+| SALLY          | PIERCE           |                          32 |
+| CHARLES        | KOWALSKI         |                          32 |
+| DEBBIE         | REYES            |                          32 |
+| SYLVIA         | ORTIZ            |                          32 |
+| FRANK          | WAGGONER         |                          32 |
+| LEROY          | BUSTAMANTE       |                          32 |
+| LEONARD        | SCHOFIELD        |                          32 |
+| VIOLA          | HANSON           |                          32 |
+| THELMA         | MURRAY           |                          32 |
+| OLGA           | JIMENEZ          |                          32 |
+| MARJORIE       | TUCKER           |                          32 |
+| JULIA          | FLORES           |                          32 |
+| COURTNEY       | DAY              |                          32 |
+| NATHAN         | RUNYON           |                          32 |
+| VERONICA       | STONE            |                          32 |
+| GORDON         | ALLARD           |                          32 |
++----------------+------------------+-----------------------------+
+100 rows in set (0.0565 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > SELECT cu.first_name AS nombre_cliente, cu.last_name AS apellido_cliente, f.title AS pelicula_rentada, r.rental_date AS fecha_renta, s.first_name AS empleado_nombre, s.last_name AS empleado_apellido FROM rental r INNER JOIN customer cu ON r.customer_id = cu.customer_id INNER JOIN inventory i ON r.inventory_id = i.inventory_id INNER JOIN film f ON i.film_id = f.film_id INNER JOIN staff s ON r.staff_id = s.staff_id ORDER BY r.rental_date DESC LIMIT 100;
++----------------+------------------+------------------------+---------------------+-----------------+-------------------+
+| nombre_cliente | apellido_cliente | pelicula_rentada       | fecha_renta         | empleado_nombre | empleado_apellido |
++----------------+------------------+------------------------+---------------------+-----------------+-------------------+
+| HILDA          | HOPKINS          | EARTH VISION           | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| CAROLYN        | PEREZ            | RIVER OUTLAW           | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| MELVIN         | ELLINGTON        | BASIC EASY             | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| SETH           | HANNON           | AFRICAN EGG            | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| LUCY           | WHEELER          | CURTAIN VIDEOTAPE      | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| DARYL          | LARUE            | STREAK RIDGEMONT       | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| RAFAEL         | ABNEY            | CONVERSATION DOWNHILL  | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| SYLVIA         | ORTIZ            | OPPOSITE NECKLACE      | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| KATIE          | ELLIOTT          | MONSTER SPARTACUS      | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| KRISTIN        | JOHNSTON         | STAR OPERATION         | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| CHRISTINE      | ROBERTS          | POLLOCK DELIVERANCE    | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| ANGELA         | HERNANDEZ        | CANYON STOCK           | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| APRIL          | BURNS            | OUTFIELD MASSACRE      | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| NORMA          | GONZALES         | SLEEPING SUSPECTS      | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| LARRY          | THRASHER         | PULP BEVERLY           | 2006-02-14 15:16:03 | Jon             | Stephens          |
+| GAIL           | KNIGHT           | HYDE DOCTOR            | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| GREGORY        | MAULDIN          | HUNGER ROOF            | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| LOUISE         | JENKINS          | FRISCO FORREST         | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| EMILY          | DIAZ             | CONNECTION MICROCOSMOS | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| SCOTT          | SHELLEY          | GRAIL FRANKENSTEIN     | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| JUSTIN         | NGO              | TITANIC BOONDOCK       | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| JERRY          | JORDON           | GUNFIGHT MOON          | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| ALICIA         | MILLS            | SLEEPLESS MONSOON      | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| DUSTIN         | GILLETTE         | CROOKED FROGMEN        | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| JUDY           | GRAY             | SUMMER SCARFACE        | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| SONIA          | GREGORY          | BERETS AGENT           | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| ZACHARY        | HITE             | FROST HEAD             | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| PEGGY          | MYERS            | CLUB GRAFFITI          | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| SERGIO         | STANFIELD        | CAMELOT VACATION       | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| LAURA          | RODRIGUEZ        | SUIT WALLS             | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| GAIL           | KNIGHT           | CHASING FIGHT          | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| BARRY          | LOVELACE         | CREATURES SHAKESPEARE  | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| CASSANDRA      | WALTERS          | PRINCESS GIANT         | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| BILL           | GAVIN            | GLEAMING JAWBREAKER    | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| ALLISON        | STANLEY          | GRAPES FURY            | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| GILBERT        | SLEDGE           | SILVERADO GOLDFINGER   | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| STACEY         | MONTGOMERY       | DETAILS PACKER         | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| CECIL          | VINES            | AMADEUS HOLY           | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| ELMER          | NOE              | MINORITY KISS          | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| CYNTHIA        | YOUNG            | SUSPECTS QUILLS        | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| NATALIE        | MEYER            | SWEDEN SHINING         | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| ANA            | BRADLEY          | HAPPINESS UNITED       | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| CASSANDRA      | WALTERS          | THEORY MERMAID         | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| FLORENCE       | WOODS            | CLUB GRAFFITI          | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| BERNARD        | COLBY            | QUEEN LUKE             | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| BEVERLY        | BROOKS           | SHREK LICENSE          | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| JEREMY         | HURTADO          | WINDOW SIDE            | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| ANNETTE        | OLSON            | DEER VIRGINIAN         | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| CHRIS          | BROTHERS         | CINCINATTI WHISPERER   | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| TRAVIS         | ESTEP            | SEABISCUIT PUNK        | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| TAMARA         | NGUYEN           | LOATHING LEGALLY       | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| COLLEEN        | BURTON           | MOONWALKER FOOL        | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| JUANITA        | MASON            | NONE SPIKING           | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| CLINTON        | BUFORD           | SCARFACE BANG          | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| BRANDON        | HUEY             | ACE GOLDFINGER         | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| MORRIS         | MCCARTER         | VANISHED GARDEN        | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| NAOMI          | JENNINGS         | WILD APOLLO            | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| TAMMY          | SANDERS          | LUST LOCK              | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| DIANNE         | SHELTON          | CAT CONEHEADS          | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| DARRYL         | ASHCRAFT         | PURE RUNNER            | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| MARGIE         | WADE             | PHILADELPHIA WIFE      | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| LUCY           | WHEELER          | SEATTLE EXPECATIONS    | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| CHARLIE        | BESS             | SONG HEDWIG            | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| VICKIE         | BREWER           | SWARM GOLD             | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| TOM            | MILNER           | HUNCHBACK IMPOSSIBLE   | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| BECKY          | MILES            | VIRGINIAN PLUTO        | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| HOLLY          | FOX              | SOUTH WAIT             | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| LAUREN         | HUDSON           | MIDNIGHT WESTWARD      | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| GWENDOLYN      | MAY              | FLYING HOOK            | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| KENNETH        | GOODEN           | OPERATION OPERATION    | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| MELANIE        | ARMSTRONG        | INTENTIONS EMPIRE      | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| CHRISTIAN      | JUNG             | HALF OUTFIELD          | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| NEIL           | RENNER           | WORLD LEATHERNECKS     | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| TERRY          | GRISSOM          | FAMILY SWEET           | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| LAWRENCE       | LAWTON           | HALF OUTFIELD          | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| JOE            | GILLILAND        | AMISTAD MIDSUMMER      | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| GREG           | ROBINS           | WANDA CHAMBER          | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| ADRIAN         | CLARY            | SHOCK CABIN            | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| KYLE           | SPURLOCK         | DANCES NONE            | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| TAMMY          | SANDERS          | SLEEPY JAPANESE        | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| CATHY          | SPENCER          | HOLES BRANNIGAN        | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| TRACY          | COLE             | ALI FOREVER            | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| ALLEN          | BUTTERFIELD      | MULAN MOON             | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| REGINA         | BERRY            | WEDDING APOLLO         | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| JEAN           | BELL             | RIDGEMONT SUBMARINE    | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| ENRIQUE        | FORSYTHE         | GUNFIGHT MOON          | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| JENNY          | CASTRO           | VOLCANO TEXAS          | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| FLORENCE       | WOODS            | BLADE POLISH           | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| SARAH          | LEWIS            | DIVINE RESURRECTION    | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| CARMEN         | OWENS            | AFFAIR PREJUDICE       | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| WILLIE         | MARKHAM          | CENTER DINOSAUR        | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| JOHN           | FARNSWORTH       | OUTLAW HANKY           | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| LEE            | HAWKS            | DETECTIVE VISION       | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| GLORIA         | COOK             | IGBY MAKER             | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| STEPHANIE      | MITCHELL         | SHOCK CABIN            | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| DAISY          | BATES            | PRIDE ALAMO            | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| CHRISTINE      | ROBERTS          | MOTIONS DETAILS        | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| CLAUDIA        | FULLER           | ENCINO ELF             | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| JESSIE         | BANKS            | DANCES NONE            | 2006-02-14 15:16:03 | Mike            | Hillyer           |
+| MARGARET       | MOORE            | DEEP CRUSADE           | 2006-02-14 15:16:03 | Mike            | Hillyer           |
++----------------+------------------+------------------------+---------------------+-----------------+-------------------+
+100 rows in set (0.1292 sec)
+ MySQL  localhost:3306 ssl  sakila  SQL > SELECT st.store_id AS tienda, f.title AS pelicula_disponible, COUNT(i.inventory_id) AS cantidad_disponible FROM inventory i INNER JOIN film f ON i.film_id = f.film_id INNER JOIN store st ON i.store_id = st.store_id LEFT JOIN rental r ON i.inventory_id = r.inventory_id AND r.return_date IS NULL WHERE r.rental_id IS NULL  -- Solo las que no están rentadas GROUP BY st.store_id, f.title ORDER BY st.store_id, f.title limit 100;
+                                       -> ;
