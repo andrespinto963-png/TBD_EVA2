@@ -1,0 +1,105 @@
+MySQL Shell 8.0.43
+
+Copyright (c) 2016, 2025, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 8
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > create user 'usuarioroles'@'localhost' identify by 'xxx.123';
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'identify by 'xxx.123'' at line 1
+ MySQL  localhost:3306 ssl  SQL > create user 'usuarioroles'@'localhost' identified by 'xxx.123';
+Query OK, 0 rows affected (0.0228 sec)
+ MySQL  localhost:3306 ssl  SQL > create role 'segundaunidad';
+Query OK, 0 rows affected (0.0137 sec)
+ MySQL  localhost:3306 ssl  SQL > grant all on tbd2.* to 'segundaunidad';
+Query OK, 0 rows affected (0.0149 sec)
+ MySQL  localhost:3306 ssl  SQL > grant 'segundaunidad' to 'usuarioroles'@'localhost';
+Query OK, 0 rows affected (0.0058 sec)
+ MySQL  localhost:3306 ssl  SQL > \connect --mc usuarioroles@localhost
+Creating a Classic session to 'usuarioroles@localhost'
+Please provide the password for 'usuarioroles@localhost': *******
+Save password for 'usuarioroles@localhost'? [Y]es/[N]o/Ne[v]er (default No): n
+Fetching global names for auto-completion... Press ^C to stop.
+Error during auto-completion cache update: Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
+Closing old connection...
+Your MySQL connection id is 9
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > show databases
+                               -> ;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| performance_schema |
++--------------------+
+2 rows in set (0.0010 sec)
+ MySQL  localhost:3306 ssl  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Closing old connection...
+Your MySQL connection id is 10
+Server version: 8.0.43 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > create table prueba(
+                               -> nombre varchar(20),
+                               -> valor int);
+ERROR: 1046 (3D000): No database selected
+ MySQL  localhost:3306 ssl  SQL > use tbd2;
+Default schema set to `tbd2`.
+Fetching global names, object names from `tbd2` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  tbd2  SQL > create table prueba( nombre varchar(20), valor int);
+Query OK, 0 rows affected (0.0372 sec)
+ MySQL  localhost:3306 ssl  tbd2  SQL > insert into prueba
+                                     -> values ("juan",100),("ana",500);
+Query OK, 2 rows affected (0.0085 sec)
+
+Records: 2  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd2  SQL > select * from prueba;
++--------+-------+
+| nombre | valor |
++--------+-------+
+| juan   |   100 |
+| ana    |   500 |
++--------+-------+
+2 rows in set (0.0006 sec)
+ MySQL  localhost:3306 ssl  tbd2  SQL > start trasaction;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'trasaction' at line 1
+ MySQL  localhost:3306 ssl  tbd2  SQL > start transaction;
+Query OK, 0 rows affected (0.0004 sec)
+ MySQL  localhost:3306 ssl  tbd2  ★  SQL > update prueba set valor = valor + 100
+                                        -> where nombre = "juan";
+Query OK, 1 row affected (0.0005 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd2  ★  SQL > update prueba set valor = valor - 100 where nombre = "ana";
+Query OK, 1 row affected (0.0008 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd2  ★  SQL > rollback;
+Query OK, 0 rows affected (0.0124 sec)
+ MySQL  localhost:3306 ssl  tbd2  SQL > select * from prueba;
++--------+-------+
+| nombre | valor |
++--------+-------+
+| juan   |   100 |
+| ana    |   500 |
++--------+-------+
+2 rows in set (0.0006 sec)
+ MySQL  localhost:3306 ssl  tbd2  SQL > update prueba set valor = valor + 100 where nombre = "juan";
+Query OK, 1 row affected (0.0145 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd2  SQL > update prueba set valor = valor - 100 where nombre = "ana";
+Query OK, 1 row affected (0.0141 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd2  SQL >
